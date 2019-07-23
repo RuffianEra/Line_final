@@ -198,11 +198,13 @@
 			},
 			AddGroup(){
 				let that=this
+				// 发送用户添加分组请求接口
 				uni.request({
 				url: 'http://www.aot9a.cn/index/user/apiaddgroup', //请求地址
 					data: {
 						user_id: this.$store.state.account_key,
-						groupname: this.v_groupname
+						groupname: this.v_groupname,
+						// yzpass: 
 					},
 					header: {
 						'content-type': 'application/x-www-form-urlencoded', 
@@ -210,14 +212,14 @@
 					dataType:'json',
 					method:'POST',
 					success(res) {
-						
-						that.GroupList.push(res.data)
-						
-						console.log(that.GroupList)
+						// 隐藏当前窗口
+						that.modalName=null;
+						uni.showToast({
+							title: '添加成功!'
+						})
 					}
 				});
 			},
-			
 			DeleteGroup(res){
 				let tempid=this.$store.state.account_key;
 				uni.showModal({

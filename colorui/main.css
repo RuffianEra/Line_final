@@ -1098,6 +1098,11 @@ button.cuIcon.lg {
 	border-left: 6upx solid #f37b1d;
 	animation: cuIcon-spin 1s infinite linear;
 	z-index: -1;
+	top: 50%;
+	margin-left: -65px;
+	margin-top: -65px;
+	left: 50%;
+	
 }
 
 .load-progress {

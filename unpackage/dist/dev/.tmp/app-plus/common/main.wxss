@@ -1093,6 +1093,10 @@ to {
 	-webkit-animation: cuIcon-spin 1s infinite linear;
 	        animation: cuIcon-spin 1s infinite linear;
 	z-index: -1;
+	top: 50%;
+	margin-left: -65px;
+	margin-top: -65px;
+	left: 50%;
 }
 .load-progress {
 	pointer-events: none;

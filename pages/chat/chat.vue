@@ -17,6 +17,7 @@
 			</view>
 		</view>
 		
+		
 		<!-- 底部导航栏 -->
 		<view class="cu-bar foot input" :style="[{bottom:InputBottom+'px'}]">
 			<view class="action">

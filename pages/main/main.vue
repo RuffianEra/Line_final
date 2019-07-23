@@ -7,7 +7,7 @@
 			<view class="cu-list menu-avatar">
 				
 				<navigator class="cu-item" 
-				:url="'/pages/chat/chat?userId='+index+'&avatar='+item.img""
+				:url="'/pages/chat/chat?userId='+index+'&avatar='+item.img"
 				v-for="(item,index) in list" :key="index">
 					<view class="cu-avatar round lg" :style="{background:'url('+item.img+')'}"></view>
 					<view class="content">
@@ -17,7 +17,7 @@
 								{{item.current_msg}}
 							</view> </view>
 					</view>
-					
+				
 					<view class="action" style="width: 75px;">
 						<view class="text-grey text-xs">{{timestampToTime(item.u_time)}}</view>
 						<view class="cu-tag round bg-grey sm" v-if="item.current_msg!=''">未读消息</view>
@@ -47,6 +47,7 @@
 		},
 		// 加载聊天记录
         onLoad() {
+			console.log(this.$store.state.account_psw)
 			var _self=this;
 			// 获取本机缓存
 			uni.getStorage({

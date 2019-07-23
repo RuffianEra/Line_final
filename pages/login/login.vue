@@ -24,7 +24,6 @@
 		
 		<!-- 登录按钮后加载中弹窗 -->
 		<view class="cu-load load-modal" v-if="loadModal">
-			<!-- <view class="cuIcon-emojifill text-orange"></view> -->
 			<image src="/static/logo.png" mode="aspectFit"></image>
 			<view class="gray-text">{{TipsText}}</view>
 		</view>
@@ -110,7 +109,9 @@
 					dataType:'json',
 					method:'POST',
 					success(res) {
-							let _data=JSON.stringify(res.data)
+							let _data=JSON.stringify(res.data);
+							if(res.data.status==1)
+							{
 							rot.TipsText='登录成功!'
 							// 将数据缓存到本机
 							uni.setStorage({
@@ -118,13 +119,17 @@
 								data: _data,
 								success: function () {
 									// 将用户id存到全局变量
-									rot.setKey(res.data.info.id+'')
+									rot.setKey(res.data.info.id+'');
+									rot.setPsw(res.data.info.password);
 								}
 							});
 							//登录成功跳转到聊天主页面
 							uni.switchTab({
 								url: '/pages/main/main'
 							});
+							}else{
+								rot.TipsText='登录失败';
+							}
 							
 					}
 				});
