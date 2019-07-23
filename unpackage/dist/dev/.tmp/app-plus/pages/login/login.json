@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "登录到Line",
+  "usingComponents": {
+    "m-input": "/components/m-input"
+  }
+}

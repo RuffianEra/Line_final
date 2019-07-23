@@ -1,0 +1,19 @@
+{
+  "navigationBarTitleText": "好友分组",
+  "titleNView": {
+    "buttons": [
+      {
+        "text": "管理",
+        "fontSize": "16",
+        "select": true,
+        "float": "right"
+      }
+    ]
+  },
+  "usingComponents": {
+    "uni-collapse": "/components/uni-collapse/uni-collapse",
+    "uni-collapse-item": "/components/uni-collapse/uni-collapse-item",
+    "uni-drawer": "/components/uni-drawer",
+    "uni-fab": "/components/uni-fab/uni-fab"
+  }
+}

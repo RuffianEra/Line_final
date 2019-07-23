@@ -1,0 +1,10 @@
+
+.uni-padding-wrap {
+	padding: 0 15px;
+	line-height: 1.8;
+}
+.fixed {
+	position: fixed;
+	z-index: 99;
+}
+
