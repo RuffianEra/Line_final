@@ -1,7 +1,6 @@
 <template>
 	<view>
 		<view class="cu-chat">
-
 			<!-- 发送消息（自己） -->
 			<view class="cu-item" v-for="(item,index) in C_ChatRecord" :key="index" :class="item.from==1?'':'self'">
 				<!-- 判断是否from是否为1（1是用户，2是自己）来隐藏显示 -->
