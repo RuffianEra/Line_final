@@ -14,14 +14,6 @@
             <button type="primary" class="primary" @tap="bindLogin">登录</button>
         </view>
 		
-		<view class="btn-row">
-			<button type="primary" class="primary" @tap="getData">得到缓存</button>
-		</view>
-		
-		<view class="btn-row">
-		    <button type="primary" class="primary" @tap="cleatData">清除缓存</button>
-		</view>
-		
 		<!-- 登录按钮后显示加载中....弹窗 -->
 		<view class="cu-load load-modal" v-if="loadModal">
 			<image src="/static/logo.png" mode="aspectFit"></image>
@@ -56,7 +48,7 @@
             }
         },
         methods: {
-			...mapMutations(['setKey','setPsw','setG_G_GroupList','setG_UserList']),
+			...mapMutations(['setKey','setPsw','setG_G_GroupList','setG_UserList','setToken','setSC']),
             initPosition() {
                 /**
                  * 使用 absolute 定位，并且设置 bottom 值进行定位。软键盘弹出时，底部会因为窗口变化而被顶上来。
@@ -125,6 +117,10 @@
 									rot.setG_G_GroupList(res.data.grouplist);
 									// 将用户好友列表存到全局变量
 									rot.setG_UserList(res.data.memberlist);
+									// 将用户Token信息存到全局变量
+									rot.setToken(res.data.info.channel_access_token);
+									// 将用户secret存到全局变量
+									rot.setSC(res.data.info.channel_secret)
 								}
 							});
 							//登录成功跳转到聊天主页面
@@ -137,22 +133,6 @@
 					}
 				});
             },
-			cleatData(){
-				uni.removeStorage({
-				key: this.$store.state.account_key,
-				success: function (res) {
-					console.log('success');
-				}
-			});	
-			},
-			getData(){
-				uni.getStorage({
-					key: this.$store.state.account_key,
-					success: function (res) {
-						console.log(res.data)
-					}
-				});	
-			},
             toMain(userName) {
                 this.login(userName);
                 /**

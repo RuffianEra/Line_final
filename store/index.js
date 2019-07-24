@@ -12,7 +12,9 @@ const store = new Vuex.Store({
 		// 用户分组列表
 		G_GroupList: [],
 		// 用户好友列表
-		G_UserList: []
+		G_UserList: [],
+		account_token: '',
+		account_secret: ''
     },
     mutations: {
     	setKey(state,newKey){
@@ -28,6 +30,13 @@ const store = new Vuex.Store({
 		setG_UserList(state,newUL)
 		{
 			state.G_UserList=newUL;
+		},
+		setToken(state,newTK)
+		{
+			state.account_token=newTK;
+		},
+		setSC(state,newSC){
+			state.account_secret=newSC;
 		}
     }
 })
