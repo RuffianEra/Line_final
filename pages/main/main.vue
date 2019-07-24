@@ -47,7 +47,8 @@
 		},
 		// 加载聊天记录
         onLoad() {
-			console.log(this.$store.state.account_psw)
+			
+			console.log(this.$store.state.account_key)
 			var _self=this;
 			// 获取本机缓存
 			uni.getStorage({

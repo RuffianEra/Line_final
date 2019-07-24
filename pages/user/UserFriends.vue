@@ -15,7 +15,7 @@
 <uniCollapse>
 	<uniCollapseItem :show-animation="true" title="我的粉丝">
 		<navigator :url="'/pages/chat/chat?userId='+u_index+'&avatar='+u_item.img" style="padding: 30upx;" 
-		v-for="(u_item,u_index) in C_UserList"
+		v-for="(u_item,u_index) in UserList"
 		 :key="u_index">
 			<view class="cu-avatar round" :style="{background:'url('+u_item.img+')'}" style="margin-right: 15px;margin-left: 10px;">
 			</view>
@@ -25,11 +25,11 @@
 </uniCollapse>
 
 <!-- 循环列出用户自己的分组 -->
-<uniCollapse v-for="(item,index) in C_GroupList" :key="index">
+<uniCollapse v-for="(item,index) in GroupList" :key="index">
 	<uniCollapseItem :show-animation="true" :title="item.groupname">
 		<!-- 如果用户id和分组id相等就显示 -->
 		<navigator :url="'/pages/chat/chat?userId='+u_index" style="padding: 30upx;" 
-		v-for="(u_item,u_index) in C_UserList"
+		v-for="(u_item,u_index) in UserList"
 		 :key="u_index" v-show="u_item.groupid==item.id">
 			<view class="cu-avatar round" :style="{background:'url('+u_item.img+')'}" style="margin-right: 15px;margin-left: 10px;">
 			</view>
@@ -41,15 +41,14 @@
 
 
 <!-- 右边弹窗栏 -->
-
-<uni-drawer :visible="IsVisible" :mode="'right'" style="margin-top:200px" @close="closeDrawer">
-	<scroll-view scroll-y="true">
-	<view style="margin-top:75px" v-for="(item,index) in GroupList" :key="index">
-		<view class="bg-gradual-blue padding">
+<uni-drawer :visible="IsVisible" :mode="'right'" style="margin-top:91px" @close="closeDrawer">
+	<scroll-view scroll-y="true" class="qwdasd">
+	<view class="qwdasd2" v-for="(item,index) in GroupList" :key="index">
+		<view  class="bg-gradual-blue padding ">
 			{{item.groupname}}
 			<button class="cuIcon-close cu-btn bg-red sm shadow round"  style="float: right;" @tap="DeleteGroup(item.id)">
 			</button>
-			<button class="cuIcon-edit cu-btn bg-green sm shadow round" style="float: right;">
+			<button class="cuIcon-edit cu-btn bg-green sm shadow round" style="float: right;" @tap="showModal2(item.id)">
 			</button>
 		</view>
 		
@@ -57,7 +56,7 @@
 	</scroll-view>
 </uni-drawer> 
 
-
+<!-- 加号弹窗 -->
 <uni-fab ref="fab" :pattern="pattern" horizontal="right" vertical="bottom" direction="horizontal" @u_trigger="showModal">
 </uni-fab>
 
@@ -82,6 +81,33 @@
 			<view class="action">
 				<button class="cu-btn line-green text-green" @tap="hideModal">取消</button>
 				<button class="cu-btn bg-green margin-left" @tap="AddGroup">添加</button>
+			</view>
+		</view>
+	</view>
+</view>
+
+
+
+<!-- 修改分组窗口 -->
+<view class="cu-modal" :class="modalName=='DialogModal2'?'show':''">
+	<view class="cu-dialog">
+		<view class="cu-bar bg-white justify-end">
+			<view class="content" style="height: 34px;">修改分组</view>
+			<view class="action" @tap="hideModal">
+				<text class="cuIcon-close text-red"></text>
+			</view>
+		</view>
+		<view class="padding-xl" style="padding: 8px;">
+
+			<view class="cu-form-group  round" style="background-color: #e5e5e5">
+				<view class="title">分组名:</view>
+				<input name="input" v-model="groupname_edit"></input>
+			</view>
+		</view>
+		<view class="cu-bar bg-white justify-end">
+			<view class="action">
+				<button class="cu-btn line-green text-green" @tap="hideModal">取消</button>
+				<button class="cu-btn bg-green margin-left" @tap="EditGroup">添加</button>
 			</view>
 		</view>
 	</view>
@@ -129,39 +155,15 @@
 				list: [],
 				tabCur: 50,
 				v_groupname: '',
+				groupname_edit: '',
 				modalName: null,
 				mainCur: 0,
 				de_index: 50,
 				CustomBar: this.CustomBar,
 				verticalNavTop: 0,
-				load: true
+				load: true,
+				GroupId: ''
 			};
-		},
-		computed: {
-			C_UserList: function(){
-				var that = this;
-				uni.getStorage({
-					key: this.$store.state.account_key,
-					success(res) {
-						let all=JSON.parse(res.data);
-						// 读取用户好友列表
-						that.UserList=all.memberlist;
-					}
-				});
-				return this.UserList
-			},
-			C_GroupList: function(){
-				var that = this;
-				uni.getStorage({
-					key: this.$store.state.account_key,
-					success(res) {
-						let all=JSON.parse(res.data);
-						// 读取聊天信息(分组列表)
-						that.GroupList=all.grouplist;
-					}
-				});
-				return this.GroupList
-			}
 		},
 		// 页面加载时候初始化数据
 		onLoad() {
@@ -193,6 +195,10 @@
 			showModal(e) {
 				this.modalName = 'DialogModal1'
 			},
+			showModal2(e){
+				this.modalName='DialogModal2'
+				this.GroupId=e
+			},
 			hideModal(e) {
 				this.modalName = null
 			},
@@ -204,7 +210,7 @@
 					data: {
 						user_id: this.$store.state.account_key,
 						groupname: this.v_groupname,
-						// yzpass: 
+						yzpass: this.$store.state.account_psw
 					},
 					header: {
 						'content-type': 'application/x-www-form-urlencoded', 
@@ -212,6 +218,8 @@
 					dataType:'json',
 					method:'POST',
 					success(res) {
+						// 将服务器返回的分组赋值给原来分组
+						that.GroupList=res.data.grouplist
 						// 隐藏当前窗口
 						that.modalName=null;
 						uni.showToast({
@@ -221,7 +229,7 @@
 				});
 			},
 			DeleteGroup(res){
-				let tempid=this.$store.state.account_key;
+				let that=this;
 				uni.showModal({
 					content:'您确定删除该分组吗？',
 					title:'删除分组',
@@ -231,8 +239,9 @@
 							uni.request({
 								url: 'http://www.aot9a.cn/index/user/apideletegroup', //删除分组接口
 									data: {
-										user_id: tempid,
-										groupid: res
+										user_id: that.$store.state.account_key,
+										groupid: res,
+										yzpass: that.$store.state.account_psw
 									},
 									header: {
 										'content-type': 'application/x-www-form-urlencoded', 
@@ -240,6 +249,8 @@
 									dataType:'json',
 									method:'POST',
 									success(res) {
+										// 更新分组信息
+										that.GroupList=res.data.grouplist
 										// 显示服务器返回过来的数据
 										uni.showToast({
 											title: res.data.msg
@@ -249,6 +260,33 @@
 						}
 					}
 				})
+			},
+			EditGroup(res){
+				let that=this;
+				console.log(this.groupname_edit);
+				uni.request({
+					url: 'http://www.aot9a.cn/index/user/apieditgroup  ', //修改分组接口
+						data: {
+							groupname: that.groupname_edit,
+							user_id: that.$store.state.account_key,
+							groupid: that.GroupId,
+							yzpass: that.$store.state.account_psw
+						},
+						header: {
+							'content-type': 'application/x-www-form-urlencoded', 
+						},
+						dataType:'json',
+						method:'POST',
+						success(res) {
+							// 隐藏当前窗口
+							that.modalName=null;
+							that.GroupList=res.data.grouplist
+							uni.showToast({
+								title: res.data.msg
+							})
+						}
+				});
+				
 			}
 		},
 	}
@@ -263,5 +301,8 @@
 	.fixed {
 		position: fixed;
 		z-index: 99;
+	}
+		.qwdasd .qwdasd2:nth-child(1){
+		margin-top:90upx
 	}
 </style>
