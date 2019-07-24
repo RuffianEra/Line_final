@@ -1448,7 +1448,7 @@ Z([[2,'+'],[[2,'+'],[1,'2'],[1,',']],[1,'1']])
 Z(z[12])
 Z([3,'u_index'])
 Z([3,'u_item'])
-Z([[7],[3,'UserList']])
+Z([[7],[3,'C_UserList']])
 Z(z[18])
 Z([3,'padding:30rpx;'])
 Z([[2,'+'],[[2,'+'],[[2,'+'],[1,'/pages/chat/chat?userId\x3d'],[[7],[3,'u_index']]],[1,'\x26avatar\x3d']],[[6],[[7],[3,'u_item']],[3,'img']]])
@@ -1457,7 +1457,7 @@ Z([[2,'+'],[1,'margin-right:15px;margin-left:10px;'],[[2,'+'],[[2,'+'],[1,'backg
 Z([a,[[2,'+'],[[2,'+'],[[2,'+'],[[2,'+'],[1,''],[[6],[[7],[3,'u_item']],[3,'remark']]],[1,'(']],[[6],[[7],[3,'u_item']],[3,'username']]],[1,')']]])
 Z([3,'index'])
 Z([3,'item'])
-Z([[7],[3,'GroupList']])
+Z([[7],[3,'C_GroupList']])
 Z(z[27])
 Z(z[10])
 Z([[2,'+'],[1,'3-'],[[7],[3,'index']]])
@@ -1496,11 +1496,11 @@ Z([3,'bg-gradual-blue padding '])
 Z([a,[[2,'+'],[[2,'+'],[1,''],[[6],[[7],[3,'item']],[3,'groupname']]],[1,'']]])
 Z(z[50])
 Z([3,'cuIcon-close cu-btn bg-red sm shadow round'])
-Z([[4],[[5],[[4],[[5],[[5],[1,'tap']],[[4],[[5],[[4],[[5],[[5],[[5],[1,'DeleteGroup']],[[4],[[5],[1,'$0']]]],[[4],[[5],[[4],[[5],[[4],[[5],[[5],[[5],[[5],[1,'GroupList']],[1,'']],[[7],[3,'index']]],[1,'id']]]]]]]]]]]]]]])
+Z([[4],[[5],[[4],[[5],[[5],[1,'tap']],[[4],[[5],[[4],[[5],[[5],[[5],[1,'DeleteGroup']],[[4],[[5],[1,'$0']]]],[[4],[[5],[[4],[[5],[[4],[[5],[[5],[[5],[[5],[1,'C_GroupList']],[1,'']],[[7],[3,'index']]],[1,'id']]]]]]]]]]]]]]])
 Z([3,'float:right;'])
 Z(z[50])
 Z([3,'cuIcon-edit cu-btn bg-green sm shadow round'])
-Z([[4],[[5],[[4],[[5],[[5],[1,'tap']],[[4],[[5],[[4],[[5],[[5],[[5],[1,'showModal2']],[[4],[[5],[1,'$0']]]],[[4],[[5],[[4],[[5],[[4],[[5],[[5],[[5],[[5],[1,'GroupList']],[1,'']],[[7],[3,'index']]],[1,'id']]]]]]]]]]]]]]])
+Z([[4],[[5],[[4],[[5],[[5],[1,'tap']],[[4],[[5],[[4],[[5],[[5],[[5],[1,'showModal2']],[[4],[[5],[1,'$0']]]],[[4],[[5],[[4],[[5],[[4],[[5],[[5],[[5],[[5],[1,'C_GroupList']],[1,'']],[[7],[3,'index']]],[1,'id']]]]]]]]]]]]]]])
 Z(z[69])
 Z(z[10])
 Z(z[50])
@@ -1590,7 +1590,7 @@ Z([[4],[[5],[[2,'?:'],[[2,'=='],[[7],[3,'radio']],[1,'A']],[1,'checked'],[1,'']]
 Z([3,'A'])
 Z([3,'index'])
 Z([3,'item'])
-Z([[7],[3,'group_list']])
+Z([[7],[3,'C_GroupList']])
 Z(z[10])
 Z([3,'cu-form-group'])
 Z(z[5])
@@ -2511,7 +2511,7 @@ __wxAppCode__['pages/main/main.wxml']=$gwx('./pages/main/main.wxml');
 __wxAppCode__['pages/user/user.wxss']=undefined;    
 __wxAppCode__['pages/user/user.wxml']=$gwx('./pages/user/user.wxml');
 
-__wxAppCode__['pages/user/UserFriends.wxss']=setCssToHead([".",[1],"uni-padding-wrap { padding: 0 15px; line-height: 1.8; }\n.",[1],"fixed { position: fixed; z-index: 99; }\n.",[1],"qwdasd .",[1],"qwdasd2:nth-child(1){ margin-top:",[0,90]," }\n",],undefined,{path:"./pages/user/UserFriends.wxss"});    
+__wxAppCode__['pages/user/UserFriends.wxss']=setCssToHead([".",[1],"uni-padding-wrap { padding: 0 15px; line-height: 1.8; }\n.",[1],"fixed { position: fixed; z-index: 99; }\n.",[1],"qwdasd .",[1],"qwdasd2:nth-child(1) { margin-top: ",[0,90]," }\n",],undefined,{path:"./pages/user/UserFriends.wxss"});    
 __wxAppCode__['pages/user/UserFriends.wxml']=$gwx('./pages/user/UserFriends.wxml');
 
 ;var __pageFrameEndTime__ = Date.now();

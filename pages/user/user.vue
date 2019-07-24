@@ -8,7 +8,7 @@
 			<radio :class="radio=='A'?'checked':''" :checked="radio=='A'?true:false" value="A"></radio>
 		</view>
 		<!-- 遍历用户自定义分组 -->
-		<view class="cu-form-group" v-for="(item,index) in group_list" :key="index">
+		<view class="cu-form-group" v-for="(item,index) in C_GroupList" :key="index">
 			<view class="title">{{item.groupname}}</view>
 			<radio :class="radio==item.id?'checked':''" :checked="radio==item.id?true:false" :value="item.id+''"></radio>
 		</view> 
@@ -43,7 +43,6 @@
 			return {
 				radio: 'A',
 				msg : false,
-				group_list: [],
 				textareaValue: ''
 			};
 		},
@@ -61,9 +60,11 @@
 				}
 			});
 		},
-		
         computed: {
-            ...mapState(['hasLogin', 'forcedLogin'])
+            ...mapState(['hasLogin', 'forcedLogin']),
+			C_GroupList: function(){
+				return this.$store.state.G_GroupList;
+			}
         },
         methods: {
             ...mapMutations(['logout']),

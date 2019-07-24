@@ -69,7 +69,7 @@
 			var _self=this
 			//接收用户id下标
 			this.User_id=e.userId;
-			this.img=e.avatar;	
+			this.img=e.avatar;
 		},
 		data() {
 			return {

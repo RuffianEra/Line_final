@@ -22,7 +22,7 @@
 		    <button type="primary" class="primary" @tap="cleatData">清除缓存</button>
 		</view>
 		
-		<!-- 登录按钮后加载中弹窗 -->
+		<!-- 登录按钮后显示加载中....弹窗 -->
 		<view class="cu-load load-modal" v-if="loadModal">
 			<image src="/static/logo.png" mode="aspectFit"></image>
 			<view class="gray-text">{{TipsText}}</view>
@@ -56,7 +56,7 @@
             }
         },
         methods: {
-			...mapMutations(['setKey','setPsw']),
+			...mapMutations(['setKey','setPsw','setG_G_GroupList','setG_UserList']),
             initPosition() {
                 /**
                  * 使用 absolute 定位，并且设置 bottom 值进行定位。软键盘弹出时，底部会因为窗口变化而被顶上来。
@@ -105,7 +105,6 @@
 					header: {
 						'content-type': 'application/x-www-form-urlencoded', 
 					},
-					
 					dataType:'json',
 					method:'POST',
 					success(res) {
@@ -120,7 +119,12 @@
 								success: function () {
 									// 将用户id存到全局变量
 									rot.setKey(res.data.info.id+'');
+									// 将用户加密密码存到全局变量
 									rot.setPsw(res.data.info.password);
+									// 将用户分组列表存到全局变量
+									rot.setG_G_GroupList(res.data.grouplist);
+									// 将用户好友列表存到全局变量
+									rot.setG_UserList(res.data.memberlist);
 								}
 							});
 							//登录成功跳转到聊天主页面
@@ -130,7 +134,6 @@
 							}else{
 								rot.TipsText='登录失败';
 							}
-							
 					}
 				});
             },

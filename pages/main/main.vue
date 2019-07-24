@@ -8,7 +8,7 @@
 				
 				<navigator class="cu-item" 
 				:url="'/pages/chat/chat?userId='+index+'&avatar='+item.img"
-				v-for="(item,index) in list" :key="index">
+				v-for="(item,index) in C_UserList" :key="index">
 					<view class="cu-avatar round lg" :style="{background:'url('+item.img+')'}"></view>
 					<view class="content">
 						<view class="text-grey">{{item.remark}}({{item.username}})</view>
@@ -42,22 +42,15 @@
         computed: mapState(['account_key']),
 		data() {
 		    return {
-				list: []
 		    }
+		},
+		computed:{
+			C_UserList: function(){
+				return this.$store.state.G_UserList;
+			}
 		},
 		// 加载聊天记录
         onLoad() {
-			
-			console.log(this.$store.state.account_key)
-			var _self=this;
-			// 获取本机缓存
-			uni.getStorage({
-				key: this.$store.state.account_key,
-				success:function(res){
-					let all=JSON.parse(res.data);
-					_self.list=all.memberlist;
-				}
-			});
         },
 		methods:{
 			// 判断用户时间的方法
