@@ -86,7 +86,6 @@
 			//接收用户id下标
 			this.User_id=e.userId;
 			this.img=e.avatar;
-<<<<<<< HEAD
 			
 			let that = this;
 			uni.getStorage({
@@ -96,7 +95,7 @@
 					that.user=all.info;
 					that.member_id=all.memberlist[that.User_id].id;
 					that.member_id_token=all.memberlist[that.User_id].member_id;
-					let chatId=JSON.parse(all.memberlist[that.User_id].reply_msg);
+					/* let chatId=JSON.parse(all.memberlist[that.User_id].reply_msg);
 					for(let item in chatId){
 						if(chatId[item].type == 'image' || chatId[item].type == 'sticker'){
 							console.log(JSON.stringify(chatId[item]) + "----------------" + item);
@@ -105,9 +104,10 @@
 						else {
 							that.ChatRecord.push(chatId[item]);
 						}
-					};
+					}; */
 				}
 			});
+			this.gainAllData();
 			setInterval((sef) => {
 				/* 2S定时任务，获取与当前用户聊天信息 */
 				uni.request({
@@ -148,8 +148,6 @@
 				innerAudioContext.src = res.tempFilePath;
 				that.ChatRecord.push({"from": 2, "text": "../../static/img/audioImg.gif", "wid": 145, hei: 61, "type": "audio", "inner": innerAudioContext});
 			});
-=======
->>>>>>> a7e80373d3950ba0b1993ec50225066d6c2a9fdc
 		},
 		data() {
 			return {
@@ -170,7 +168,10 @@
 				remark: '',
 				toggle: true,
 				face:false,
-				dataSend: ''
+				dataSend: '',
+				
+				request_data: {},
+				request_header: {}
 			};
 		},
 		
@@ -232,6 +233,40 @@
 			this.IsVisible = !this.IsVisible
 		},
 		methods: {
+			gainAllData(){
+				let sef = this;
+				uni.request({
+					url: 'http://www.aot9a.cn/index/user/apimemberfind',
+					method: 'POST',
+					header:{
+						'content-type': 'application/x-www-form-urlencoded', 
+					},
+					data: {
+						user_id: sef.$store.state.account_key,
+						member_id: sef.member_id,
+						yzpass: sef.$store.state.account_psw
+					},
+					success: (res) => {
+						console.log(res);
+						let chatId=JSON.parse(res.data.data.reply_msg);
+						console.log(chatId);
+						for(let item in chatId){
+							console.log(chatId[item])
+							if(chatId[item].type == 'image' || chatId[item].type == 'sticker'){
+								console.log(JSON.stringify(chatId[item]) + "----------------" + item);
+								sef.addImageData(chatId[item]);
+							}
+							else {
+								sef.ChatRecord.push(chatId[item]);
+							}
+						};
+					}
+				});
+				console.log("user_id-----" + sef.$store.state.account_key);
+				console.log("member_id-----" + this.member_id);
+				console.log("yzpass-----" + sef.$store.state.account_psw);
+				console.log("获取与当前用户的所有聊天数据");
+			},
 			uploadData(){
 				console.log(this.user);
 				let sef = this;
@@ -242,6 +277,15 @@
 				console.log("channelSecret-----" + this.user.channel_secret);
 				console.log("member_id_token-----" + this.member_id_token);
 				console.log("member_id-----" + this.member_id); */
+				let data = {
+					user_id: sef.$store.state.account_key,
+					yzpass: sef.$store.state.account_psw,
+					content: sef.dataSend,
+					channel_access_token: sef.user.channel_access_token,
+					channel_secret: sef.user.channel_secret,
+					member_id_token: sef.member_id_token,
+					member_id: sef.member_id
+				};
 				uni.request({
 					url: "http://www.aot9a.cn/index/user/apisendmessage",
 					method: "POST",
@@ -341,11 +385,24 @@
 				uni.chooseImage({
 					success(temp) {
 						sef.addImageData({"from":2, "text":temp.tempFilePaths[0].substring(":"), "type":"image", "time":new Date().getTime()});
+						this.uploadData();
 						console.log("发送图片");
 					}
 				})
 			},
 			send() {
+				this.request_data={
+					user_id: this.$store.state.account_key,
+					yzpass: this.$store.state.account_psw,
+					content: this.dataSend,
+					channel_access_token: this.user.channel_access_token,
+					channel_secret: this.user.channel_secret,
+					member_id_token: this.member_id_token,
+					member_id: this.member_id
+				};
+				this.request_header={
+					'content-type': 'application/x-www-form-urlencoded', 
+				};
 				this.ChatRecord.push({"from":2, "text":this.dataSend, "type":"text", "time":new Date().getTime()});
 				this.uploadData();
 				this.dataSend = ""; 
