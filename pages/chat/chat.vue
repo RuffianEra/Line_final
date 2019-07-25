@@ -22,6 +22,7 @@
 			</view>
 		</view>
 		
+		
 		<!-- 底部导航栏 -->
 		<view class="cu-bar foot input" :style="[{bottom:InputBottom+'px'}]">
 			<view class="action">
@@ -85,6 +86,7 @@
 			//接收用户id下标
 			this.User_id=e.userId;
 			this.img=e.avatar;
+<<<<<<< HEAD
 			
 			let that = this;
 			uni.getStorage({
@@ -146,6 +148,8 @@
 				innerAudioContext.src = res.tempFilePath;
 				that.ChatRecord.push({"from": 2, "text": "../../static/img/audioImg.gif", "wid": 145, hei: 61, "type": "audio", "inner": innerAudioContext});
 			});
+=======
+>>>>>>> a7e80373d3950ba0b1993ec50225066d6c2a9fdc
 		},
 		data() {
 			return {
