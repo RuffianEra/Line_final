@@ -128,7 +128,6 @@
 		},
 		watch: {
 			pattern(newValue, oldValue) {
-				console.log(JSON.stringify(newValue))
 				this.styles = Object.assign({}, this.styles, newValue)
 			}
 		},
