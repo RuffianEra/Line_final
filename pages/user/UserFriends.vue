@@ -1,13 +1,13 @@
 <template>
 	<view>
 		<!-- 搜索框 -->
-		<view class="cu-bar bg-white search fixed" :style="[{top:CustomBar + 'px'}]" style="position: relative;height:44px">
+		<view class="cu-bar bg-white search fixed" style="position: relative;height:44px">
 			<view class="search-form round">
 				<text class="cuIcon-search"></text>
 				<input type="text" placeholder="输入要搜索的好友" confirm-type="search" @input="_input"></input>
 			</view>
 		</view>
-		
+
 		<!-- 点击搜索后显示的页面 -->
 		<navigator :url="'/pages/chat/chat?userId='+u_index+'&avatar='+u_item.img" style="padding: 30upx;" v-for="(u_item,u_index) in S_list"
 		 :key="u_index">
@@ -15,8 +15,8 @@
 			</view>
 			{{u_item.remark}}({{u_item.username}})
 		</navigator>
-		
-		
+
+
 		<!-- 默认列出我的粉丝 -->
 		<uniCollapse>
 			<uniCollapseItem :show-animation="true" title="我的粉丝">
@@ -28,7 +28,7 @@
 				</navigator>
 			</uniCollapseItem>
 		</uniCollapse>
-		
+
 
 		<!-- 循环列出用户自己的分组 -->
 		<uniCollapse v-for="(item,index) in C_GroupList" :key="index">
@@ -151,23 +151,18 @@
 				},
 				IsVisible: false,
 				S_list: [],
-				tabCur: 50,
 				v_groupname: '',
 				groupname_edit: '',
 				modalName: null,
-				mainCur: 0,
-				de_index: 50,
-				CustomBar: this.CustomBar,
-				verticalNavTop: 0,
 				load: true,
 				GroupId: ''
 			};
 		},
 		computed: {
-			C_GroupList: function(){
+			C_GroupList: function() {
 				return this.$store.state.G_GroupList;
 			},
-			C_UserList: function(){
+			C_UserList: function() {
 				return this.$store.state.G_UserList;
 			}
 		},
@@ -288,19 +283,17 @@
 				});
 			},
 			// 实时搜索用户信息方法
-			_input(res){
+			_input(res) {
 				// 重新清空数组
-				this.S_list=[];
-				let value=res.detail.value;
-				let array=this.$store.state.G_UserList;
-				if(value!=='')
-				{
-				for (var i = 0; i < array.length; i++) {
-					if(array[i].remark.indexOf(value)!==-1||array[i].username.indexOf(value)!==-1)
-					{
-						this.S_list.push(array[i]);
+				this.S_list = [];
+				let value = res.detail.value;
+				let array = this.$store.state.G_UserList;
+				if (value !== '') {
+					for (var i = 0; i < array.length; i++) {
+						if (array[i].remark.indexOf(value) !== -1 || array[i].username.indexOf(value) !== -1) {
+							this.S_list.push(array[i]);
+						}
 					}
-				}
 				}
 			}
 		},

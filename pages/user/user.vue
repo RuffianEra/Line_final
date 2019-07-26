@@ -1,5 +1,6 @@
 <template>
     <view class="content">
+		
 		<!-- 单选框栏目 -->
 		<radio-group class="block" @change="RadioChange">
 			
@@ -13,6 +14,7 @@
 			<radio :class="radio==item.id?'checked':''" :checked="radio==item.id?true:false" :value="item.id+''"></radio>
 		</view> 
 		</radio-group>
+		
 		
 		<view class="cu-form-group margin-top">
 			<textarea maxlength="-1"  @input="textareaInput" placeholder="请输入你需要群发的信息"></textarea>
@@ -45,13 +47,11 @@
 		onLoad() {
 		},
         computed: {
-            ...mapState(['hasLogin', 'forcedLogin']),
 			C_GroupList: function(){
 				return this.$store.state.G_GroupList;
 			}
         },
         methods: {
-            ...mapMutations(['logout']),
 			GroupSends(){
 				// 如果内容不为空则发送
 				if(this.textareaValue!='')
