@@ -48,5 +48,8 @@
 	},
 	"mp-toutiao" : {
 	    "usingComponents" : true
+	},
+	"networkTimeout" : {
+		"request" : 60000
 	}
 }

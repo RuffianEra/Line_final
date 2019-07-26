@@ -7,7 +7,7 @@
 			<view class="cu-list menu-avatar">
 				
 				<navigator class="cu-item" 
-				:url="'/pages/chat/chat?userId='+index+'&avatar='+item.img"
+				:url="'/pages/chat/chat?userId='+index+'&avatar='+item.img+'&member_id='+item.id+'&member_id_token='+item.member_id"
 				v-for="(item,index) in C_UserList" :key="index">
 					<view class="cu-avatar round lg" :style="{background:'url('+item.img+')'}"></view>
 					<view class="content">
