@@ -61,7 +61,6 @@
     "mp-baidu" : {
         "usingComponents" : true
     },
-<<<<<<< HEAD
 	"mp-alipay" : {
 	    "usingComponents" : true
 	},

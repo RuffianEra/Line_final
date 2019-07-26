@@ -5,16 +5,9 @@
 		<scroll-view scroll-y="true" class="page" enable-back-to-top="true">
 
 			<view class="cu-list menu-avatar">
-<<<<<<< HEAD
-				
-				<navigator class="cu-item" 
-				:url="'/pages/chat/chat?userId='+index+'&avatar='+item.img+'&member_id='+item.id+'&member_id_token='+item.member_id"
-				v-for="(item,index) in C_UserList" :key="index">
-=======
 
-				<navigator class="cu-item" :url="'/pages/chat/chat?userId='+index+'&avatar='+item.img" v-for="(item,index) in C_UserList"
+				<navigator class="cu-item" :url="'/pages/chat/chat?userId='+index+'&avatar='+item.img+'&member_id='+item.id+'&member_id_token='+item.member_id" v-for="(item,index) in C_UserList"
 				 :key="index">
->>>>>>> 83a18737f0828245a3fdc57f60acaa364bce16e5
 					<view class="cu-avatar round lg" :style="{background:'url('+item.img+')'}"></view>
 					<view class="content">
 						<view class="text-grey">{{item.remark}}({{item.username}})</view>
