@@ -68,7 +68,6 @@
 				<input class="cu-form-group round" 
 				style="background-color: #e5e5e5;margin-right: 24px;margin-left: 14px;" type="text" :placeholder="C_name"/>
 				<button type="primary" class="padding radius text-center shadow-blur" style="padding: 0upx;margin-top: 10upx;margin-right: 20px;margin-left: 15px;">确定</button>
-
 			</view>
 		</uniDrawer>
 	</view>
