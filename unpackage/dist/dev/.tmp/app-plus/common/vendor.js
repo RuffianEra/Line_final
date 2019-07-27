@@ -1,8 +1,8 @@
 (global["webpackJsonp"] = global["webpackJsonp"] || []).push([["common/vendor"],[
 /* 0 */
-/*!*******************************************!*\
-  !*** D:/app_uniapp_projects/Line/main.js ***!
-  \*******************************************/
+/*!**************************************!*\
+  !*** D:/Vue_work/Line_final/main.js ***!
+  \**************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -43,9 +43,9 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* WEBPACK VAR INJECTION */(f
 
 /***/ }),
 /* 4 */
-/*!**********************************************!*\
-  !*** D:/app_uniapp_projects/Line/pages.json ***!
-  \**********************************************/
+/*!*****************************************!*\
+  !*** D:/Vue_work/Line_final/pages.json ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -70,9 +70,9 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 /***/ }),
 /* 11 */
-/*!**************************************************!*\
-  !*** D:/app_uniapp_projects/Line/store/index.js ***!
-  \**************************************************/
+/*!*********************************************!*\
+  !*** D:/Vue_work/Line_final/store/index.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -92,9 +92,9 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 /***/ }),
 /* 13 */
-/*!****************************************************************************!*\
-  !*** D:/app_uniapp_projects/Line/main.js?{"page":"pages%2Flogin%2Flogin"} ***!
-  \****************************************************************************/
+/*!***********************************************************************!*\
+  !*** D:/Vue_work/Line_final/main.js?{"page":"pages%2Flogin%2Flogin"} ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -110,9 +110,9 @@ eval("/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! 
 /* 19 */,
 /* 20 */,
 /* 21 */
-/*!**************************************************************************!*\
-  !*** D:/app_uniapp_projects/Line/main.js?{"page":"pages%2Fmain%2Fmain"} ***!
-  \**************************************************************************/
+/*!*********************************************************************!*\
+  !*** D:/Vue_work/Line_final/main.js?{"page":"pages%2Fmain%2Fmain"} ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -128,9 +128,9 @@ eval("/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! 
 /* 27 */,
 /* 28 */,
 /* 29 */
-/*!**************************************************************************!*\
-  !*** D:/app_uniapp_projects/Line/main.js?{"page":"pages%2Fuser%2Fuser"} ***!
-  \**************************************************************************/
+/*!*********************************************************************!*\
+  !*** D:/Vue_work/Line_final/main.js?{"page":"pages%2Fuser%2Fuser"} ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -144,9 +144,9 @@ eval("/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! 
 /* 33 */,
 /* 34 */,
 /* 35 */
-/*!*********************************************************************************!*\
-  !*** D:/app_uniapp_projects/Line/main.js?{"page":"pages%2Fuser%2FUserFriends"} ***!
-  \*********************************************************************************/
+/*!****************************************************************************!*\
+  !*** D:/Vue_work/Line_final/main.js?{"page":"pages%2Fuser%2FUserFriends"} ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -162,9 +162,9 @@ eval("/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! 
 /* 41 */,
 /* 42 */,
 /* 43 */
-/*!**************************************************************************!*\
-  !*** D:/app_uniapp_projects/Line/main.js?{"page":"pages%2Fchat%2Fchat"} ***!
-  \**************************************************************************/
+/*!*********************************************************************!*\
+  !*** D:/Vue_work/Line_final/main.js?{"page":"pages%2Fchat%2Fchat"} ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -178,9 +178,9 @@ eval("/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! 
 /* 47 */,
 /* 48 */,
 /* 49 */
-/*!******************************************************!*\
-  !*** D:/app_uniapp_projects/Line/static/emojis.json ***!
-  \******************************************************/
+/*!*************************************************!*\
+  !*** D:/Vue_work/Line_final/static/emojis.json ***!
+  \*************************************************/
 /*! exports provided: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, default */
 /***/ (function(module) {
 

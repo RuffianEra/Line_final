@@ -119,7 +119,15 @@
 			uniDrawer,
 			xflSelect
 		},
-		
+		watch:{
+			ChatRecord: () => {
+				console.log("自动下滑至页面底部");
+				uni.pageScrollTo({
+					scrollTop: 102400,
+					duration: 500
+				})
+			}
+		},
 		// 接收页面传过来的参数,e代表的是数组用户的下标
 		onLoad(e) {
 			this.icon = require("../../static/emojis.json");
@@ -146,11 +154,24 @@
 						console.log(res);
 						if(res.data.status == 1) {
 							for(let arry in res.data.message){
-								if(res.data.message[arry].type == "text"){
+								if(res.data.message[arry].type == 'image' || res.data.message[arry].type == 'sticker'){
+									sef.addImageData(chatId[item], true);
+								}
+								else if(res.data.message[arry].type == 'audio'){
+									let innerAudioContext = uni.createInnerAudioContext();
+									innerAudioContext.src="http://www.aot9a.cn/"+res.data.message[arry].text;
+									innerAudioContext.onEnded(function(res) {
+										sef.iconId = 0;
+									});
+									innerAudioContext.onCanplay(function(){
+										console.log("音频文件长度：" + innerAudioContext.duration);
+										res.data.message[arry].time=innerAudioContext.duration>1?Math.ceil(innerAudioContext.duration):1;
+									});
+									res.data.message[arry].inner=innerAudioContext;
 									sef.ChatRecord.push(res.data.message[arry]);
 								}
-								else if(res.data.message[arry].type == "image"){
-									sef.addImageData(res.data.message[arry], true);
+								else {
+									sef.ChatRecord.push(res.data.message[arry]);
 								}
 							}
 						}
@@ -162,10 +183,15 @@
 				let innerAudioContext = uni.createInnerAudioContext();
 				innerAudioContext.onEnded(function(res){
 					that.iconId = 0;
-				})
+				});
 				innerAudioContext.src = res.tempFilePath;
+				let chatId = {"from": 2, "type": "audio", "inner": innerAudioContext};
+				innerAudioContext.onCanplay(function(res){
+					console.log("音频文件长度：" + innerAudioContext.duration);
+					chatId.time=innerAudioContext.duration>1?Math.ceil(innerAudioContext.duration):1;
+				});
 				console.log(res.tempFilePath);
-				that.ChatRecord.push({"from": 2, "text": "../../static/img/audioImg.gif", "wid": 145, hei: 61, "type": "audio", "inner": innerAudioContext});
+				that.ChatRecord.push(chatId);
 				that.uploadFile("http://www.aot9a.cn/index/user/apiupload_Audio", res.tempFilePath, "audio", {"user_id": that.$store.state.account_key, 
 							"yzpass": that.$store.state.account_psw, "member_id": that.member_id});
 			});
@@ -264,11 +290,11 @@
 								innerAudioContext.src="http://www.aot9a.cn/"+chatId[item].text;
 								innerAudioContext.onEnded(function(res){
 									sef.iconId = 0;
-								})
+								});
 								innerAudioContext.onCanplay(function(res){
 									console.log("音频文件长度：" + innerAudioContext.duration);
 									chatId[item].time=innerAudioContext.duration>1?Math.ceil(innerAudioContext.duration):1;
-								})
+								});
 								chatId[item].inner=innerAudioContext;
 								sef.ChatRecord.push(chatId[item]);
 							}
@@ -321,7 +347,7 @@
 			},
 			addImageData(item, lean) {//http://www.aot9a.cn/
 				if(lean) item.text=item.text.indexOf("http")!=-1?item.text:"http://www.aot9a.cn/"+item.text;
-				/* console.log("根据地址获取图片宽高");
+				console.log("根据地址获取图片宽高");
 				uni.getImageInfo({
 					src: item.text,
 					success: (img) => {
@@ -338,7 +364,7 @@
 							item.hei = img.height;
 						}
 					}
-				}); */
+				});
 				this.ChatRecord.push(item);
 			},
 			openAudio(index, inner){
