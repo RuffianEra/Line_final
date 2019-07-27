@@ -8,17 +8,20 @@
 				<view v-if="item.from==1" class="cu-avatar round" :style="{background:'url('+img+')'}"></view>
 				<view class="main">
 					<view class="content  shadow" :class="item.from==2?'bg-green':''">
-						<!-- 聊天内容正文 -->
-						<image v-if="item.type == 'image' || item.type == 'sticker'" :src="item.text" @tap="openImg(item.text)" :style="{'width': item.wid +'px', 'height': item.hei + 'px'}"></image>
+						<!-- 图片 -->
+						<image v-if="item.type == 'image'" :src="item.text" @tap="openImg(item.text)" :style="{'width': item.wid +'px', 'height': item.hei + 'px'}"></image>
+						<!-- 表情 -->
+						<image v-else-if="item.type == 'sticker'" :src="item.text" :style="{'width': item.wid +'px', 'height': item.hei + 'px'}"></image>
 						<!-- 语言消息 -->
-						<view v-else-if="item.type == 'audio'" class="bubble voice" @tap="openAudio(item.inner)" ><!-- :class="playMsgid == row.msg.id?'play':''" -->
-							<view class="length">00:09</view>
-							<view class="icon my-voice"></view>
+						<view v-else-if="item.type == 'audio'" class="bubble voice" @tap="openAudio(index, item.inner)" :class="index==iconId?'play':''" style="display: flex;">
+							<view v-if="item.from==1" class="icon other-voice"></view>
+							<view class="length">{{item.time}}s</view>
+							<view v-if="item.from==2" class="icon my-voice"></view>
 						</view>
 						<!-- <image v-else-if="item.type == 'audio'" src="../../static/img/audioImg.gif" @tap="openAudio(item.inner)" :style="{'width': item.wid +'px', 'height': item.hei + 'px'}"></image> -->
-						<!-- 视频文件 -->
+						<!-- 视频 -->
 						<video v-else-if="item.type == 'video'" :src="item.text"></video>
-						<!-- 文本文件 -->
+						<!-- 文本 -->
 						<text v-else>{{item.text}}</text>
 					</view>
 				</view>
@@ -107,6 +110,8 @@
 				GroupId: 1,
 				icon: [],
 				iconOpen: false,
+				iconId: 0,
+				
 				intervalID: 0
 			};
 		},
@@ -155,6 +160,9 @@
 			}, 20000, this);
 			record.onStop(function(res){
 				let innerAudioContext = uni.createInnerAudioContext();
+				innerAudioContext.onEnded(function(res){
+					that.iconId = 0;
+				})
 				innerAudioContext.src = res.tempFilePath;
 				console.log(res.tempFilePath);
 				that.ChatRecord.push({"from": 2, "text": "../../static/img/audioImg.gif", "wid": 145, hei: 61, "type": "audio", "inner": innerAudioContext});
@@ -254,8 +262,15 @@
 							else if(chatId[item].type == 'audio'){
 								let innerAudioContext = uni.createInnerAudioContext();
 								innerAudioContext.src="http://www.aot9a.cn/"+chatId[item].text;
+								innerAudioContext.onEnded(function(res){
+									sef.iconId = 0;
+								})
+								innerAudioContext.onCanplay(function(res){
+									console.log("音频文件长度：" + innerAudioContext.duration);
+									chatId[item].time=innerAudioContext.duration>1?Math.ceil(innerAudioContext.duration):1;
+								})
 								chatId[item].inner=innerAudioContext;
-								sef.addImageData(chatId[item], true)
+								sef.ChatRecord.push(chatId[item]);
 							}
 							else {
 								sef.ChatRecord.push(chatId[item]);
@@ -306,8 +321,8 @@
 			},
 			addImageData(item, lean) {//http://www.aot9a.cn/
 				if(lean) item.text=item.text.indexOf("http")!=-1?item.text:"http://www.aot9a.cn/"+item.text;
-				console.log("根据地址获取图片宽高");
-				/* uni.getImageInfo({
+				/* console.log("根据地址获取图片宽高");
+				uni.getImageInfo({
 					src: item.text,
 					success: (img) => {
 						let maxW = uni.upx2px(350);//350是定义消息图片最大宽度
@@ -326,7 +341,8 @@
 				}); */
 				this.ChatRecord.push(item);
 			},
-			openAudio(inner){
+			openAudio(index, inner){
+				this.iconId=index;
 				console.log(inner.src);
 				inner.play();
 				console.log("播放音频文件");
@@ -364,7 +380,7 @@
 				}
 			},
 			iconSend(index) {
-				this.addImageData({"from":2, "text": this.icon[index].src, "type":"image", "time":new Date().getTime()}, false);
+				this.addImageData({"from":2, "text": this.icon[index].src, "type":"sticker", "time":new Date().getTime()}, false);
 				this.iconOpen = false;
 				uni.request({
 					url: "http://www.aot9a.cn/index/user/apisticker",
