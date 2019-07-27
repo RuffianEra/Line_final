@@ -49,7 +49,27 @@
 		},
 		// 加载聊天记录
 		onLoad() {
-			setInterval()
+			setInterval((sef)=>{
+				
+				uni.request({
+					url: 'http://www.aot9a.cn/index/user/apigetlist', //请求地址
+					data: {
+						user_id: this.$store.state.account_key,
+						yzpass: this.$store.state.account_psw
+					},
+					header: {
+						'content-type': 'application/x-www-form-urlencoded',
+					},
+					dataType: 'json',
+					method: 'POST',
+					success(res) {
+						console.log(res.data)
+					}
+				});	
+				
+				
+				
+			},9000, this);
 		},
 		methods: {
 			// 判断用户时间的方法

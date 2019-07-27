@@ -235,6 +235,9 @@
 					}
 				});
 			},
+			
+			
+			
 			DeleteGroup(res) {
 				let that = this;
 				uni.showModal({
