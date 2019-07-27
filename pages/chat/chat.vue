@@ -59,9 +59,9 @@
 				<!-- 分组下拉框 -->
 				<view style="width: 80%; margin: auto;margin-bottom: 20px;">
 					<xfl-select :list="C_GroupList" :clearable="false" :showItemNum="10" :listShow="false" :isCanInput="false"
-					 :style_Container="listBoxStyle" :placeholder="'placeholder'" :initValue="'我的粉丝'">
+					 :style_Container="listBoxStyle" :placeholder="'placeholder'" :initValue="'我的粉丝'" @change="getValue()">
 					</xfl-select>
-					<button class="bg-gradual-green padding radius text-center shadow-blur" style="padding: 0upx;margin-top: 10upx;">确定</button>
+					<button class="bg-gradual-green padding radius text-center shadow-blur" style="padding: 0upx;margin-top: 10upx;" @tap="modifyGroup">确定</button>
 				</view>
 
 				<span class="text-black text-bold" style="margin-left: 23px;">修改备注：</span>
@@ -78,7 +78,9 @@
 	import xflSelect from '../../components/xfl-select/xfl-select.vue';
 	//导入标题栏弹窗框组件
 	import uniDrawer from "@/components/uni-drawer.vue"
-	
+	import {
+		mapMutations
+	} from 'vuex'
 	const record = uni.getRecorderManager();
 	export default {
 		data() {
@@ -101,10 +103,9 @@
 				toggle: true,
 				face:false,
 				dataSend: '',
-				
+				GroupId: 1,
 				icon: [],
 				iconOpen: false,
-				
 				intervalID: 0
 			};
 		},
@@ -112,16 +113,15 @@
 			uniDrawer,
 			xflSelect
 		},
+		
 		// 接收页面传过来的参数,e代表的是数组用户的下标
 		onLoad(e) {
 			this.icon = require("../../static/emojis.json");
 			//接收用户id下标
 			this.User_id=e.userId;
 			this.img=e.avatar;
-			
 			this.member_id=e.member_id;
-			this.member_id_token=e.member_id_token;
-			
+			this.member_id_token=e.member_id_token;  
 			let that = this;
 			that.gainAllData();
 			that.intervalID=setInterval((sef) => {
@@ -180,17 +180,14 @@
 			// 计算分组信息
 			C_GroupList: function(){
 				let that = this;
-				uni.getStorage({
-					key: this.$store.state.account_key,
-					success(res) {
-						let all=JSON.parse(res.data);
-						let _list=all.grouplist;
-						for (var i = 0; i < _list.length; i++) {
-							that.list[i]=_list[i].groupname;
-						}
-					}
-				});
-				return this.list
+				let _list=this.$store.state.G_GroupList;
+				for (var i = 0; i < _list.length; i++) {
+					that.list[i]=_list[i].groupname;
+				}
+				return that.list;
+			},
+			C_UserList: function() {
+				return this.$store.state.G_UserList;
 			}
 		},
 		onNavigationBarButtonTap() {
@@ -202,6 +199,7 @@
 			this.IsVisible = !this.IsVisible
 		},
 		methods: {
+			...mapMutations(['setG_G_GroupList']),
 			/* 进入页面调用一次，获取与该客户所有聊天数据 */
 			gainAllData(){
 				let sef = this;
@@ -278,7 +276,7 @@
 			addImageData(item, lean) {//http://www.aot9a.cn/
 				if(lean) item.text=item.text.indexOf("http")!=-1?item.text:"http://www.aot9a.cn/"+item.text;
 				console.log("根据地址获取图片宽高");
-				uni.getImageInfo({
+				/* uni.getImageInfo({
 					src: item.text,
 					success: (img) => {
 						let maxW = uni.upx2px(350);//350是定义消息图片最大宽度
@@ -294,7 +292,7 @@
 							item.hei = img.height;
 						}
 					}
-				});
+				}); */
 				this.ChatRecord.push(item);
 			},
 			openAudio(inner){
@@ -387,6 +385,46 @@
 			},
 			InputBlur(e) {
 				this.InputBottom = 0
+			},
+			getValue(e){
+				// 将用户选中的消息给变量
+				this.GroupId=this.$store.state.G_GroupList[e.index].id;
+			},
+			modifyGroup()
+			{
+				let that=this;
+				// 修改用户所属分组
+				uni.request({
+					url: 'http://www.aot9a.cn/index/user/apieditmembergroup', //修改分组接口
+					data: {
+						user_id: that.$store.state.account_key,
+						groupid: that.GroupId,
+						yzpass: that.$store.state.account_psw,
+						member_id: that.member_id
+					},
+					header: {
+						'content-type': 'application/x-www-form-urlencoded',
+					},
+					dataType: 'json',
+					method: 'POST',
+					success(res) {
+						// that.$store.state.G_UserList[that.User_id].groupid=that.GroupId;
+						uni.showToast({
+							title: res.data.msg,
+							icon:'none'
+						});
+						uni.switchTab({
+							url:'../user/UserFriends',
+							success() {
+								let temp=that.C_UserList;
+								temp[that.User_id].groupid=that.GroupId;
+								that.C_UserList=temp;
+							}
+						})
+						
+					}
+				});
+				
 			},
 			// 判断用户时间的方法
 			timestampToTime(cjsj) {

@@ -119,6 +119,7 @@
 								key: res.data.info.id+'',
 								data: _data,
 								success: function () {
+									console.log(res.data)
 									// 将用户id存到全局变量
 									rot.setKey(res.data.info.id+'');
 									// 将用户加密密码存到全局变量

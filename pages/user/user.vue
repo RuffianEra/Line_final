@@ -48,6 +48,7 @@
 		},
         computed: {
 			C_GroupList: function(){
+				console.log(this.$store.state.G_GroupList)
 				return this.$store.state.G_GroupList;
 			}
         },

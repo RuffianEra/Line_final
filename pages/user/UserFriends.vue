@@ -17,11 +17,12 @@
 		</navigator>
 
 
+
 		<!-- 默认列出我的粉丝 -->
 		<uniCollapse>
 			<uniCollapseItem :show-animation="true" title="我的粉丝">
-				<navigator :url="'/pages/chat/chat?userId='+u_index+'&avatar='+u_item.img" style="padding: 30upx;" v-for="(u_item,u_index) in C_UserList"
-				 :key="u_index">
+				<navigator :url="'/pages/chat/chat?userId='+u_index+'&avatar='+u_item.img+'&member_id='+u_item.id+'&member_id_token='+u_item.member_id" style="padding: 30upx;" v-for="(u_item,u_index) in C_UserList"
+				 :key="u_index" v-show="u_item.groupid==1">
 					<view class="cu-avatar round" :style="{background:'url('+u_item.img+')'}" style="margin-right: 15px;margin-left: 10px;">
 					</view>
 					{{u_item.remark}}({{u_item.username}})
@@ -30,11 +31,12 @@
 		</uniCollapse>
 
 
+
 		<!-- 循环列出用户自己的分组 -->
 		<uniCollapse v-for="(item,index) in C_GroupList" :key="index">
 			<uniCollapseItem :show-animation="true" :title="item.groupname">
 				<!-- 如果用户id和分组id相等就显示 -->
-				<navigator :url="'/pages/chat/chat?userId='+u_index" style="padding: 30upx;" v-for="(u_item,u_index) in C_UserList"
+				<navigator :url="'/pages/chat/chat?userId='+index+'&avatar='+item.img+'&member_id='+u_item.id+'&member_id_token='+u_item.member_id" style="padding: 30upx;" v-for="(u_item,u_index) in C_UserList"
 				 :key="u_index" v-show="u_item.groupid==item.id">
 					<view class="cu-avatar round" :style="{background:'url('+u_item.img+')'}" style="margin-right: 15px;margin-left: 10px;">
 					</view>
@@ -163,6 +165,7 @@
 				return this.$store.state.G_GroupList;
 			},
 			C_UserList: function() {
+				console.log('改变后的数组'+this.$store.state.G_UserList);
 				return this.$store.state.G_UserList;
 			}
 		},
@@ -216,7 +219,7 @@
 					method: 'POST',
 					success(res) {
 						// 将服务器返回的分组赋值给原来分组
-						that.$store.state.G_GroupList = res.data.grouplist
+						that.setG_G_GroupList(res.data.grouplist)
 						// 隐藏当前窗口
 						that.modalName = null;
 						uni.showToast({
@@ -246,7 +249,7 @@
 								method: 'POST',
 								success(res) {
 									// 更新分组信息
-									that.$store.state.G_GroupList = res.data.grouplist
+									that.setG_G_GroupList(res.data.grouplist)
 									// 显示服务器返回过来的数据
 									uni.showToast({
 										title: res.data.msg
@@ -275,7 +278,7 @@
 					success(res) {
 						// 隐藏当前窗口
 						that.modalName = null;
-						that.$store.state.G_GroupList = res.data.grouplist
+						that.setG_G_GroupList(res.data.grouplist)
 						uni.showToast({
 							title: res.data.msg
 						})
