@@ -169,6 +169,9 @@
 				return this.$store.state.G_UserList;
 			}
 		},
+		onShow() {
+			console.log('页面显示')
+		},
 		methods: {
 			...mapMutations(['setKey', 'setPsw', 'setG_G_GroupList']),
 			// 页面加载时候初始化数据

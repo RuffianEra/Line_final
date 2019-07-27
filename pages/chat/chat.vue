@@ -186,8 +186,15 @@
 				}
 				return that.list;
 			},
-			C_UserList: function() {
+			C_UserList: {
+				get: function() {
 				return this.$store.state.G_UserList;
+			},
+				set: function(value){
+					this.$store.state.G_UserList=value;
+				}
+				
+				
 			}
 		},
 		onNavigationBarButtonTap() {
@@ -199,7 +206,7 @@
 			this.IsVisible = !this.IsVisible
 		},
 		methods: {
-			...mapMutations(['setG_G_GroupList']),
+			...mapMutations(['setG_UserList']),
 			/* 进入页面调用一次，获取与该客户所有聊天数据 */
 			gainAllData(){
 				let sef = this;
@@ -419,6 +426,7 @@
 								let temp=that.C_UserList;
 								temp[that.User_id].groupid=that.GroupId;
 								that.C_UserList=temp;
+								that.setG_UserList(temp);
 							}
 						})
 						
