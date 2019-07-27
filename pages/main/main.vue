@@ -5,7 +5,26 @@
 		<scroll-view scroll-y="true" class="page" enable-back-to-top="true">
 
 			<view class="cu-list menu-avatar">
-
+	
+	<!-- 显示最新的聊天记录 -->
+	<navigator class="cu-item" 
+	:url="'/pages/chat/chat?userId='+index+'&avatar='+n_item.img+'&member_id='+n_item.id+'&member_id_token='+n_item.member_id" v-for="(n_item,index) in C_ChatRecond"
+	 :key="index">
+		<view class="cu-avatar round lg" :style="{background:'url('+n_item.img+')'}"></view>
+		<view class="content">
+			<view class="text-grey">{{n_item.remark}}({{n_item.username}})</view>
+			<view class="text-gray text-sm flex">
+				<view class="text-cut">
+					{{n_item.reply_msg}}
+				</view>
+			</view>
+		</view>
+		<view class="action" style="width: 75px;">
+			<view class="text-grey text-xs">{{timestampToTime(n_item.u_time)}}</view>
+			<view class="cu-tag round bg-grey sm" v-if="n_item.current_msg!=''">{{n_item.current_msg}}</view>
+		</view>
+	</navigator>
+				
 				<navigator class="cu-item" :url="'/pages/chat/chat?userId='+index+'&avatar='+item.img+'&member_id='+item.id+'&member_id_token='+item.member_id" v-for="(item,index) in C_UserList"
 				 :key="index">
 					<view class="cu-avatar round lg" :style="{background:'url('+item.img+')'}"></view>
@@ -17,13 +36,16 @@
 							</view>
 						</view>
 					</view>
-
 					<view class="action" style="width: 75px;">
 						<view class="text-grey text-xs">{{timestampToTime(item.u_time)}}</view>
 						<view class="cu-tag round bg-grey sm" v-if="item.current_msg!=''">未读消息</view>
 					</view>
-
 				</navigator>
+				
+				
+				
+	
+				
 			</view>
 		</scroll-view>
 
@@ -39,18 +61,28 @@
 	export default {
 		data() {
 			return {
-				newList: []
+				newList: [],
+				intervalID: 0
 			}
 		},
 		computed: {
 			C_UserList: function() {
 				return this.$store.state.G_UserList;
+			},
+			C_ChatRecond: function(){
+				return this.newList;
 			}
 		},
 		// 加载聊天记录
 		onLoad() {
-			setInterval((sef)=>{
-				
+			
+		},
+		onHide() {
+			clearInterval(this.intervalID);
+		},
+		onShow() {
+			this.intervalID=setInterval((sef)=>{
+				let that=this;
 				uni.request({
 					url: 'http://www.aot9a.cn/index/user/apigetlist', //请求地址
 					data: {
@@ -63,13 +95,23 @@
 					dataType: 'json',
 					method: 'POST',
 					success(res) {
-						console.log(res.data)
+						if(res.data.status!=2)
+						{
+							for (var i = 0; i < that.newList.length; i++) {
+								if(res.data.data[0].id==that.newList[i].id)
+								{
+									that.newList[i]=res.data.data[0];
+								}
+								return;
+							}
+							that.newList.unshift(res.data.data[0]);
+						}
+						console.log(that.newList);
+						
 					}
 				});	
-				
-				
-				
-			},9000, this);
+			
+			},3000, this);
 		},
 		methods: {
 			// 判断用户时间的方法
