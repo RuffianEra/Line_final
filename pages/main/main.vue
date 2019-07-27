@@ -49,7 +49,7 @@
 		},
 		// 加载聊天记录
 		onLoad() {
-			/* setInterval((sef)=>{
+			setInterval((sef)=>{
 				
 				uni.request({
 					url: 'http://www.aot9a.cn/index/user/apigetlist', //请求地址
@@ -69,7 +69,7 @@
 				
 				
 				
-			},9000, this); */
+			},9000, this);
 		},
 		methods: {
 			// 判断用户时间的方法
