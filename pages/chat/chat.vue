@@ -66,8 +66,8 @@
 
 				<span class="text-black text-bold" style="margin-left: 23px;">修改备注：</span>
 				<input class="cu-form-group round" 
-				style="background-color: #e5e5e5;margin-right: 24px;margin-left: 14px;" type="text" :placeholder="C_name"/>
-				<button type="primary" class="padding radius text-center shadow-blur" style="padding: 0upx;margin-top: 10upx;margin-right: 20px;margin-left: 15px;">确定</button>
+				style="background-color: #e5e5e5;margin-right: 24px;margin-left: 14px;" type="text" :placeholder="C_name" v-model="V_remark"/>
+				<button type="primary" class="padding radius text-center shadow-blur" style="padding: 0upx;margin-top: 10upx;margin-right: 20px;margin-left: 15px;" @tap="modifyRemark">确定</button>
 			</view>
 		</uniDrawer>
 	</view>
@@ -99,6 +99,7 @@
 				arrays: [],
 				test: self,
 				img: '',
+				V_remark: '',
 				remark: '',
 				toggle: true,
 				face:false,
@@ -193,8 +194,6 @@
 				set: function(value){
 					this.$store.state.G_UserList=value;
 				}
-				
-				
 			}
 		},
 		onNavigationBarButtonTap() {
@@ -207,6 +206,31 @@
 		},
 		methods: {
 			...mapMutations(['setG_UserList']),
+			modifyRemark(){
+				let that=this
+				uni.request({
+					url: 'http://www.aot9a.cn/index/user/apiremark', //修改分组接口
+					data: {
+						user_id: that.$store.state.account_key,
+						remark: that.V_remark,
+						yzpass: that.$store.state.account_psw,
+						member_id: that.member_id
+					},
+					header: {
+						'content-type': 'application/x-www-form-urlencoded',
+					},
+					dataType: 'json',
+					method: 'POST',
+					success(res) {
+						uni.showToast({
+							title:res.data.msg,
+							icon:'none'
+						})
+						that.IsVisible = !that.IsVisible
+					}
+				});
+				
+			},
 			/* 进入页面调用一次，获取与该客户所有聊天数据 */
 			gainAllData(){
 				let sef = this;
@@ -429,7 +453,6 @@
 								that.setG_UserList(temp);
 							}
 						})
-						
 					}
 				});
 				

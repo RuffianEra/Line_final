@@ -164,13 +164,17 @@
 			C_GroupList: function() {
 				return this.$store.state.G_GroupList;
 			},
-			C_UserList: function() {
-				console.log('改变后的数组'+this.$store.state.G_UserList);
+			C_UserList: {
+				get: function() {
 				return this.$store.state.G_UserList;
+				},
+				set: function(value){
+					this.$store.state.G_UserList=value;
+				}
 			}
 		},
 		onShow() {
-			console.log('页面显示')
+			this.C_UserList=this.$store.state.G_UserList;
 		},
 		methods: {
 			...mapMutations(['setKey', 'setPsw', 'setG_G_GroupList']),

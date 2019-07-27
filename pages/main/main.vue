@@ -38,7 +38,9 @@
 	} from 'vuex'
 	export default {
 		data() {
-			return {}
+			return {
+				newList: []
+			}
 		},
 		computed: {
 			C_UserList: function() {
@@ -46,7 +48,9 @@
 			}
 		},
 		// 加载聊天记录
-		onLoad() {},
+		onLoad() {
+			setInterval()
+		},
 		methods: {
 			// 判断用户时间的方法
 			timestampToTime(cjsj) {
