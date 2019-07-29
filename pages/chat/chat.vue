@@ -1,7 +1,6 @@
 <template>
 	<view @tap="holdup">
 		<view class="cu-chat">
-
 			<!-- 发送消息（自己） -->
 			<view class="cu-item" v-for="(item,index) in ChatRecord" :key="index" :class="item.from==1?'':'self'">
 				<!-- 判断是否from是否为1（1是用户，2是自己）来隐藏显示 -->
@@ -66,7 +65,7 @@
 					</xfl-select>
 					<button class="bg-gradual-green padding radius text-center shadow-blur" style="padding: 0upx;margin-top: 10upx;" @tap="modifyGroup">确定</button>
 				</view>
-
+				
 				<span class="text-black text-bold" style="margin-left: 23px;">修改备注：</span>
 				<input class="cu-form-group round" 
 				style="background-color: #e5e5e5;margin-right: 24px;margin-left: 14px;" type="text" :placeholder="C_name" v-model="V_remark"/>
@@ -128,6 +127,18 @@
 				})
 			}
 		},
+		onReady() {
+			uni.pageScrollTo({
+				scrollTop: 102400,
+				duration: 500
+			})
+		},
+		onShow() {
+			uni.pageScrollTo({
+				scrollTop: 102400,
+				duration: 500
+			})
+		},
 		// 接收页面传过来的参数,e代表的是数组用户的下标
 		onLoad(e) {
 			this.icon = require("../../static/emojis.json");
@@ -178,7 +189,7 @@
 					}
 				});
 				console.log("10S定时任务,异步实时获取用户聊天记录");
-			}, 20000, this);
+			}, 5000, this);
 			record.onStop(function(res){
 				let innerAudioContext = uni.createInnerAudioContext();
 				innerAudioContext.onEnded(function(res){

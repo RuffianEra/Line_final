@@ -1,2 +1,0 @@
-setCssToHead([".",[1],"uni-padding-wrap { padding: 0 15px; line-height: 1.8; }\n.",[1],"fixed { position: fixed; z-index: 99; }\n.",[1],"qwdasd .",[1],"qwdasd2:nth-child(1) { margin-top: ",[0,90]," }\n",],undefined,{path:"./pages/user/UserFriends.wxss"})();
-document.dispatchEvent(new CustomEvent("generateFuncReady", { detail: { generateFunc: $gwx('./pages/user/UserFriends.wxml') } }));
