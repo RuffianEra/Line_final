@@ -17,7 +17,6 @@
 		</navigator>
 
 
-
 		<!-- 默认列出我的粉丝 -->
 		<uniCollapse>
 			<uniCollapseItem :show-animation="true" title="我的粉丝">

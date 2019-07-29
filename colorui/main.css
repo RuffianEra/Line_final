@@ -886,10 +886,11 @@ button.cuIcon.lg {
 	position: relative;
 	width: 64upx;
 	height: 64upx;
-	background-size: cover;
 	background-position: center;
 	vertical-align: middle;
 	font-size: 1.5em;
+	background-size: 100% !important;
+    background-repeat: no-repeat !important;
 }
 
 .cu-avatar.sm {

@@ -1,55 +1,7 @@
 <script>
 	export default {
 		onLaunch: function() {
-			// 检测版本更新
 			
-			
-			
-			
-			// #ifdef APP-PLUS  
-			plus.runtime.getProperty(plus.runtime.appid, function(widgetInfo) {
-				uni.request({
-					url: 'http://www.aot9a.cn/index/user/apiversion',
-					data: {
-						version: widgetInfo.version,
-						appid: plus.runtime.appid
-					},
-					method:'GET',
-					success: (result) => {
-						console.log(result.data)
-						var data = result.data;
-						if(data.status===1)
-						{
-							uni.showModal({
-								title:'有新版本更新！！！',
-								content: data.note,
-								showCancel: false,
-								success(res) {
-									if (res.confirm){
-										uni.downloadFile({
-											url: data.url,
-											success: (downloadResult) => {
-												if (downloadResult.statusCode === 200) {
-													plus.runtime.install(downloadResult.tempFilePath, {
-														force: false
-													}, function() {
-														console.log('安装成功,重启应用!!!');
-														plus.runtime.restart();
-													}, function(e) {
-														console.error('安装失败!!!');
-													});
-												}
-											}
-										});
-									}
-								}
-							})
-						}
-						
-					}
-				});
-			});
-			// #endif  
 		},
 		onShow: function() {
 			console.log('App Show');
