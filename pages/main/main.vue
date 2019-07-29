@@ -12,7 +12,7 @@
 	 :key="index">
 		<view class="cu-avatar round lg" :style="{background:'url('+n_item.img+')'}"></view>
 		<view class="content">
-			<view class="text-grey">{{n_item.remark}}({{n_item.username}})</view>
+			<view class="text-grey">{{n_item.username}}({{n_item.remark}})</view>
 			<view class="text-gray text-sm flex">
 				<view class="text-cut">
 					{{n_item.reply_msg}}
@@ -24,7 +24,6 @@
 			<view class="cu-tag round bg-grey sm" v-if="n_item.current_msg!=''">{{n_item.current_msg}}</view>
 		</view>
 	</navigator>
-				
 				<navigator class="cu-item" :url="'/pages/chat/chat?userId='+index+'&avatar='+item.img+'&member_id='+item.id+'&member_id_token='+item.member_id" v-for="(item,index) in C_UserList"
 				 :key="index">
 					<view class="cu-avatar round lg" :style="{background:'url('+item.img+')'}"></view>
