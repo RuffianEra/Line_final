@@ -73,16 +73,17 @@
 				 :placeholder="C_name" v-model="V_remark" />
 				<button type="primary" class="padding radius text-center shadow-blur" style="padding: 0upx;margin-top: 10upx;margin-right: 20px;margin-left: 15px;"
 				 @tap="modifyRemark">确定</button>
+				 
+				 
 				 <!-- 转给接待人员栏目 -->
 				 <span class="text-black text-bold" style="margin-left: 23px;">转给接待人员：</span>
 				 <view style="width: 80%; margin: auto;margin-bottom: 20px;">
-				 	<xfl-select :list="WaitList" :clearable="false" :showItemNum="10" :listShow="false" :isCanInput="false"
-				 	 :style_Container="listBoxStyle" :placeholder="'placeholder'" :initValue="'请选择接待人员'" @change="getValue()">
+				 	<xfl-select :list="C_WaitList" :clearable="false" :showItemNum="10" :listShow="false" :isCanInput="false"
+				 	 :style_Container="listBoxStyle" :placeholder="'placeholder'" :initValue="'请选择接待人员'" @change="getWaitListValue()">
 				 	</xfl-select>
-				 	<button class="bg-gradual-green padding radius text-center shadow-blur" style="padding: 0upx;margin-top: 10upx;"
+				 	<button @tap="sendWaitList"   class="bg-gradual-green padding radius text-center shadow-blur" style="padding: 0upx;margin-top: 10upx;"
 				 	 >确定</button>
 				 </view>
-				 
 				 
 			</view>
 		</uniDrawer>
@@ -110,6 +111,7 @@
 				member_id_token: '',
 				User_id: 0,
 				list: [],
+				waitList: [],
 				IsVisible: false,
 				InputBottom: 0,
 				ChatRecord: [],
@@ -126,7 +128,7 @@
 				iconOpen: false,
 				iconId: 0,
 				intervalID: 0,
-				WaitList: []
+				waitListID: 0
 			};
 		},
 		components: {
@@ -144,7 +146,6 @@
 				}, 500);
 			}
 		},
-		
 		// 接收页面传过来的参数,e代表的是数组用户的下标
 		onLoad(e) {
 			console.log(this.$store.state.G_UserList[e.userId]);
@@ -249,14 +250,27 @@
 			},
 			C_UserList: function(){
 					return this.$store.state.G_UserList;
+			},
+			C_WaitList: function(){
+				let that=this;
+				let _list=[];
+				for (let i = 0; i < that.waitList.length; i++) {
+					_list[i] = that.waitList[i].username;
+				}
+				return _list;
 			}
 		},
 		onNavigationBarButtonTap() {
-			let that=this;
 			// 设置弹窗栏的属性为真
 			this.IsVisible = !this.IsVisible
-			//请求接待人员
-			// WaitList
+		},
+		// 监听页面返回
+		onBackPress() {
+			this.IsVisible = !this.IsVisible
+		},
+		onShow() {
+			var that=this
+			// 请求接待人员
 			uni.request({
 				url: 'http://www.aot9a.cn/index/user/apiedithuser',
 				data: {
@@ -270,18 +284,9 @@
 				dataType: 'json',
 				method: 'POST',
 				success(res) {
-					for (var i = 0; i < res.data.userlist.length; i++) {
-						that.WaitList[i]=res.data.userlist.username;
-					}
-					console.log();
+					that.waitList=res.data.userlist;
 				}
 			});
-			
-			
-		},
-		// 监听页面返回
-		onBackPress() {
-			this.IsVisible = !this.IsVisible
 		},
 		methods: {
 			...mapMutations(['setG_UserList']),
@@ -322,7 +327,8 @@
 					data: {
 						user_id: sef.$store.state.account_key,
 						member_id: sef.member_id,
-						yzpass: sef.$store.state.account_psw
+						yzpass: sef.$store.state.account_psw,
+						page: 1
 					},
 					success: (res) => {
 						let chatId = JSON.parse(res.data.data.reply_msg);
@@ -520,6 +526,35 @@
 			getValue(e) {
 				// 将用户选中的消息给变量
 				this.GroupId = this.$store.state.G_GroupList[e.index].id;
+			},
+			getWaitListValue(e)
+			{
+				this.waitListID=this.waitList[e.index].id
+			},
+			sendWaitList(){
+				let that = this;
+				// 修改用户所属分组
+				uni.request({
+					url: 'http://www.aot9a.cn/index/user/apiedithuser', 
+					data: {
+						user_id: that.$store.state.account_key,
+						edituser_id: that.waitListID,
+						yzpass: that.$store.state.account_psw,
+						member_id: that.member_id
+					},
+					header: {
+						'content-type': 'application/x-www-form-urlencoded',
+					},
+					dataType: 'json',
+					method: 'POST',
+					success(res) {
+						uni.showToast({
+							title:res.data.msg
+						})
+						that.IsVisible = !that.IsVisible
+					}
+				});
+				
 			},
 			modifyGroup() {
 				let that = this;
