@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view @tap="openLean">
 
 		<!-- 聊天滚动视图 -->
 		<scroll-view scroll-y="true" class="page" enable-back-to-top="true">
@@ -8,7 +8,7 @@
 
 
 				<!-- 显示最新的聊天记录 -->
-				<navigator class="cu-item" :url="'/pages/chat/chat?userId='+index+'&avatar='+n_item.img+'&member_id='+n_item.id+'&member_id_token='+n_item.member_id"
+				<navigator :id="'recond'+index" class="cu-item" :url="'/pages/chat/chat?userId='+index+'&avatar='+n_item.img+'&member_id='+n_item.id+'&member_id_token='+n_item.member_id"
 				 v-for="(n_item,index) in C_ChatRecond" :key="index">
 					<view class="cu-avatar round lg" :style="{background:'url('+n_item.img+')'}"></view>
 					<view class="content">
@@ -29,7 +29,7 @@
 				
 				
 				<navigator class="cu-item" :url="'/pages/chat/chat?userId='+index+'&avatar='+item.img+'&member_id='+item.id+'&member_id_token='+item.member_id"
-				 v-for="(item,index) in C_UserList" :key="index">
+				 v-for="(item,index) in C_UserList" v-if="item.lean != true" :key="index">
 					<view class="cu-avatar round lg" :style="{background:'url('+item.img+')'}"></view>
 					<view class="content">
 						<view class="text-grey">{{item.remark}}({{item.username}})</view>
@@ -80,7 +80,13 @@
 			clearInterval(this.intervalID);
 		},
 		onShow() {
+			this.erval();
 			this.intervalID = setInterval((sef) => {
+				sef.erval();
+			}, 3000, this);
+		},
+		methods: {
+			erval(){
 				let that = this;
 				uni.request({
 					url: 'http://www.aot9a.cn/index/user/apigetlist', //请求地址
@@ -94,24 +100,26 @@
 					dataType: 'json',
 					method: 'POST',
 					success(res) {
+						console.log("---------未读数据---------")
+						console.log(res.data)
 						if (res.data.status != 2) {
 							console.log('更新前数组:');
-							for (var i = 0; i < that.newList.length; i++) {
-								if (res.data.data[0].id == that.newList[i].id) {
-									that.$set(that.newList,i,res.data.data[0]);
-									// that.newList[i] = res.data.data[0];
+							for (var i = 0; i < res.data.data.length; i++) {
+								for(let list in that.C_UserList){
+									if(that.C_UserList[list].id == res.data.data[i].id){
+										that.C_UserList[list].lean = true;
+										break;
+									}
 								}
-								return;
+								that.$set(that.newList, i, res.data.data[i]);
 							}
-							that.newList.unshift(res.data.data[0]);
+						} else {
+							that.newList = [];
+							console.log("数据清空")
 						}
-						console.log(that.newList);
 					}
 				});
-
-			}, 3000, this);
-		},
-		methods: {
+			},
 			// 判断用户时间的方法
 			timestampToTime(cjsj) {
 				// 获取当前时间戳
