@@ -1,27 +1,26 @@
-<template >
-    <view class="content">
-		<!-- 显示默认头像 -->
-		<view class="cu-avatar xl round margin-left" 
-		style="margin: 0 auto;background-image: url('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1564137772253&di=89bb4222e006388cfe34a85fbb35aa49&imgtype=0&src=http%3A%2F%2F001.img.pu.sohu.com.cn%2Fgroup2%2FM01%2FF1%2FD8%2FMTAuMTAuODguODE%3D%2FMTAwMTE0XzE1MjI2NTYxMjMxNDA%3D%2Fcut%40m%3Dresize%2Cw%3D400%2Ch%3D400_cut%40m%3Dcrop%2Cx%3D0%2Cy%3D0%2Cw%3D400%2Ch%3D400.jpg');">
+<template>
+	<view class="content">
+		<view class="header">
+			<image src="../../static/img/logo.png"></image>
+		</view>
+		<view class="list">
+			<view class="list-call">
+				<image class="img" src="../../static/username.png"></image>
+				<input class="biaoti" v-model="account" type="text" maxlength="11" placeholder="输入帐号" />
+			</view>
+			<view class="list-call">
+				<image class="img" src="../../static/password.png"></image>
+				<input class="biaoti" v-model="password" type="password" maxlength="32" placeholder="输入密码" password="true" />
+			</view>
+		</view>
+		<view class="dlbutton" hover-class="dlbutton-hover" @tap="bindLogin">
+			<text>登录</text>
 		</view>
 		
-        <view class="input-group">
-            <view class="input-row border">
-                <text class="title">账号：</text>
-                <m-input class="m-input" type="text" clearable focus v-model="account" placeholder="请输入账号"></m-input>
-            </view>
-            <view class="input-row">
-                <text class="title">密码：</text>
-                <m-input type="password" displayable v-model="password" placeholder="请输入密码"></m-input>
-            </view>
-        </view>
-        <view class="btn-row">
-            <button type="primary" class="primary" @tap="bindLogin">登录</button>
-        </view>
 		
 		<!-- 登录按钮后显示加载中....弹窗 -->
 		<view class="cu-load load-modal" v-if="loadModal">
-			<image src="/static/logo.png" mode="aspectFit"></image>
+			<image src="/static/loading.png" mode="aspectFit"></image>
 			<view class="gray-text">{{TipsText}}</view>
 		</view>
 		<!-- 显示公司LOGO -->
@@ -30,7 +29,6 @@
 		</image>
 		</view>
 		
-		
 		<!-- 显示下载更新进度条 -->
 		<view v-if="update">
 		<view style="margin: 0 auto;">下载进度:{{RemainTime}}%</view>
@@ -38,7 +36,8 @@
 			<view class="bg-green" :style="[{ width:RemainTime+'%'}]"></view>
 		</view>
 		</view>
-    </view>
+		
+	</view>
 </template>
 
 <script>
@@ -46,12 +45,7 @@
         mapState,
         mapMutations
     } from 'vuex'
-	// 导入显示隐藏密码js
-    import mInput from '../../components/m-input.vue'
     export default {
-        components: {
-            mInput
-        },
 		onLoad() {
 			let that=this;
 			// 检测版本更新
@@ -218,5 +212,89 @@
         color: #007aff;
         padding: 0 20upx;
     }
+	
+	.content {
+		display: flex;
+		flex-direction: column;
+		
+	}
+	.header {
+		width:161upx;
+		height:161upx;
+		background:rgba(63,205,235,1);
+		box-shadow:0upx 12upx 13upx 0upx rgba(63,205,235,0.47);
+		border-radius:50%;
+		margin-top: 30upx;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.header image{
+		width:161upx;
+		height:161upx;
+		border-radius:50%;
+	}
+	
+	.list {
+		display: flex;
+		flex-direction: column;
+		padding-top: 50upx;
+		padding-left: 70upx;
+		padding-right: 70upx;
+	}
+	.list-call{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		height: 100upx;
+		color: #333333;
+		border-bottom: 1upx solid rgba(230,230,230,1);
+	}
+	.list-call .img{
+		width: 40upx;
+		height: 40upx;
+	}
+	.list-call .biaoti{
+		flex: 1;
+		text-align: left;
+		font-size: 32upx;
+		line-height: 100upx;
+		margin-left: 16upx;
+	}
+	
+	.dlbutton {
+		color: #FFFFFF;
+		font-size: 34upx;
+		width:470upx;
+		height:100upx;
+		background:linear-gradient(-90deg,rgba(63,205,235,1),rgba(188,226,158,1));
+		box-shadow:0upx 0upx 13upx 0upx rgba(164,217,228,0.2);
+		border-radius:50upx;
+		line-height: 100upx;
+		text-align: center;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 100upx;
+	}
+	.dlbutton-hover {
+		background:linear-gradient(-90deg,rgba(63,205,235,0.9),rgba(188,226,158,0.9));
+	}
+	.xieyi{
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		font-size: 30upx;
+		margin-top: 80upx;
+		color: #FFA800;
+		text-align: center;
+		height: 40upx;
+		line-height: 40upx;
+	}
+	.xieyi text{
+		font-size: 24upx;
+		margin-left: 15upx;
+		margin-right: 15upx;
+	}
 
 </style>

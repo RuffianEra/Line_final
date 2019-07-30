@@ -27,6 +27,8 @@
 		<view class="btn-row">
 			<button  type="warn"  @tap="LoginOut">退出登录</button>
 		</view>
+		
+		
 	</view>
 	</template>
 
@@ -86,8 +88,6 @@
 						icon: 'none'
 					})
 				}
-				
-				
 			},
 			textareaInput(e) {
 				this.textareaValue = e.detail.value
