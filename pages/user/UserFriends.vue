@@ -19,7 +19,7 @@
 
 		<!-- 默认列出我的粉丝 -->
 		<uniCollapse>
-			<uniCollapseItem :show-animation="true" title="我的粉丝">
+			<uniCollapseItem :show-animation="false" title="我的粉丝">
 				<navigator :url="'/pages/chat/chat?userId='+u_index+'&avatar='+u_item.img+'&member_id='+u_item.id+'&member_id_token='+u_item.member_id" style="padding: 30upx;" v-for="(u_item,u_index) in C_UserList"
 				 :key="u_index" v-show="u_item.groupid==1">
 					<view class="cu-avatar round" :style="{background:'url('+u_item.img+')'}" style="margin-right: 15px;margin-left: 10px;">
@@ -29,11 +29,9 @@
 			</uniCollapseItem>
 		</uniCollapse>
 
-
-
 		<!-- 循环列出用户自己的分组 -->
 		<uniCollapse v-for="(item,index) in C_GroupList" :key="index">
-			<uniCollapseItem :show-animation="true" :title="item.groupname">
+			<uniCollapseItem :show-animation="false" :title="item.groupname">
 				<!-- 如果用户id和分组id相等就显示 -->
 				<navigator :url="'/pages/chat/chat?userId='+index+'&avatar='+item.img+'&member_id='+u_item.id+'&member_id_token='+u_item.member_id" style="padding: 30upx;" v-for="(u_item,u_index) in C_UserList"
 				 :key="u_index" v-show="u_item.groupid==item.id">
@@ -163,17 +161,12 @@
 			C_GroupList: function() {
 				return this.$store.state.G_GroupList;
 			},
-			C_UserList: {
-				get: function() {
+			C_UserList: function(){
 				return this.$store.state.G_UserList;
-				},
-				set: function(value){
-					this.$store.state.G_UserList=value;
-				}
 			}
 		},
 		onShow() {
-			this.C_UserList=this.$store.state.G_UserList;
+			
 		},
 		methods: {
 			...mapMutations(['setKey', 'setPsw', 'setG_G_GroupList']),
@@ -234,8 +227,6 @@
 					}
 				});
 			},
-			
-			
 			
 			DeleteGroup(res) {
 				let that = this;

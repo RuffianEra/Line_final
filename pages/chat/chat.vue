@@ -31,6 +31,7 @@
 			</view>
 		</view>
 
+
 		<!-- 底部导航栏 -->
 		<view class="cu-bar foot input" :style="[{bottom:InputBottom+'px'}]">
 			<view class="action">
@@ -57,7 +58,6 @@
 		<!-- 右边弹窗栏页面 -->
 		<uniDrawer :visible="IsVisible" style="margin-top: 60px;" :mode="'right'" @close="closeDrawer">
 			<view style="margin-top:15px">
-
 				<span class="text-black text-bold" style="margin-left: 23px;">移动用户至：</span>
 				<!-- 分组下拉框 -->
 				<view style="width: 80%; margin: auto;margin-bottom: 20px;">
@@ -67,12 +67,23 @@
 					<button class="bg-gradual-green padding radius text-center shadow-blur" style="padding: 0upx;margin-top: 10upx;"
 					 @tap="modifyGroup">确定</button>
 				</view>
-
+				<!-- 修改备注栏目 -->
 				<span class="text-black text-bold" style="margin-left: 23px;">修改备注：</span>
 				<input class="cu-form-group round" style="background-color: #e5e5e5;margin-right: 24px;margin-left: 14px;" type="text"
 				 :placeholder="C_name" v-model="V_remark" />
 				<button type="primary" class="padding radius text-center shadow-blur" style="padding: 0upx;margin-top: 10upx;margin-right: 20px;margin-left: 15px;"
 				 @tap="modifyRemark">确定</button>
+				 <!-- 转给接待人员栏目 -->
+				 <span class="text-black text-bold" style="margin-left: 23px;">转给接待人员：</span>
+				 <view style="width: 80%; margin: auto;margin-bottom: 20px;">
+				 	<xfl-select :list="WaitList" :clearable="false" :showItemNum="10" :listShow="false" :isCanInput="false"
+				 	 :style_Container="listBoxStyle" :placeholder="'placeholder'" :initValue="'请选择接待人员'" @change="getValue()">
+				 	</xfl-select>
+				 	<button class="bg-gradual-green padding radius text-center shadow-blur" style="padding: 0upx;margin-top: 10upx;"
+				 	 >确定</button>
+				 </view>
+				 
+				 
 			</view>
 		</uniDrawer>
 	</view>
@@ -80,10 +91,11 @@
 
 <script>
 	// 导入下拉框组件
-	import xflSelect from '../../components/xfl-select/xfl-select.vue';
+	import xflSelect from '../../components/xfl-select/xfl-select.vue'
 	//导入标题栏弹窗框组件
-	import uniDrawer from "@/components/uni-drawer.vue"
+	import uniDrawer from '@/components/uni-drawer.vue'
 	import {
+		mapState,
 		mapMutations
 	} from 'vuex'
 	const record = uni.getRecorderManager();
@@ -113,8 +125,8 @@
 				icon: [],
 				iconOpen: false,
 				iconId: 0,
-
-				intervalID: 0
+				intervalID: 0,
+				WaitList: []
 			};
 		},
 		components: {
@@ -132,6 +144,7 @@
 				}, 500);
 			}
 		},
+		
 		// 接收页面传过来的参数,e代表的是数组用户的下标
 		onLoad(e) {
 			console.log(this.$store.state.G_UserList[e.userId]);
@@ -213,7 +226,6 @@
 		onUnload() {
 			clearInterval(this.intervalID);
 		},
-
 		computed: {
 			C_name: function() {
 				let that = this;
@@ -235,18 +247,37 @@
 				}
 				return that.list;
 			},
-			C_UserList: {
-				get: function() {
+			C_UserList: function(){
 					return this.$store.state.G_UserList;
-				},
-				set: function(value) {
-					this.$store.state.G_UserList = value;
-				}
 			}
 		},
 		onNavigationBarButtonTap() {
+			let that=this;
 			// 设置弹窗栏的属性为真
 			this.IsVisible = !this.IsVisible
+			//请求接待人员
+			// WaitList
+			uni.request({
+				url: 'http://www.aot9a.cn/index/user/apiedithuser',
+				data: {
+					user_id: that.$store.state.account_key,
+					yzpass: that.$store.state.account_psw,
+					member_id: that.member_id
+				},
+				header: {
+					'content-type': 'application/x-www-form-urlencoded',
+				},
+				dataType: 'json',
+				method: 'POST',
+				success(res) {
+					for (var i = 0; i < res.data.userlist.length; i++) {
+						that.WaitList[i]=res.data.userlist.username;
+					}
+					console.log();
+				}
+			});
+			
+			
 		},
 		// 监听页面返回
 		onBackPress() {
@@ -457,7 +488,6 @@
 							"time": new Date().getTime()
 						}, false);
 						console.log(temp.tempFilePaths);
-
 						sef.uploadFile("http://www.aot9a.cn/index/user/apiupload_photo", temp.tempFilePaths[0].substring(":"), "img", {
 							"user_id": sef.$store.state.account_key,
 							"yzpass": sef.$store.state.account_psw,
@@ -508,23 +538,14 @@
 					dataType: 'json',
 					method: 'POST',
 					success(res) {
-						// that.$store.state.G_UserList[that.User_id].groupid=that.GroupId;
 						uni.showToast({
 							title: res.data.msg,
 							icon: 'none'
 						});
-						uni.switchTab({
-							url: '../user/UserFriends',
-							success() {
-								let temp = that.C_UserList;
-								temp[that.User_id].groupid = that.GroupId;
-								that.C_UserList = temp;
-								that.setG_UserList(temp);
-							}
-						})
+						that.$set(that.$store.state.G_UserList[that.User_id],'groupid',that.GroupId);
+						that.IsVisible = !that.IsVisible
 					}
 				});
-
 			},
 			// 判断用户时间的方法
 			timestampToTime(cjsj) {
