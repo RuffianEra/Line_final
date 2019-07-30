@@ -126,9 +126,6 @@
                  */
                 this.positionTop = uni.getSystemInfoSync().windowHeight - 100;
             },
-			add(){
-				this.time+=10
-			},
             bindLogin() {
                 /**
                  * 客户端对账号信息进行一些必要的校验。
@@ -148,7 +145,6 @@
                     });
                     return;
                 }
-                
                 const data = {
                     account: this.account,
                     password: this.password

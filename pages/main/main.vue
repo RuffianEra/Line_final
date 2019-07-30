@@ -6,7 +6,6 @@
 
 			<view class="cu-list menu-avatar">
 
-
 				<!-- 显示最新的聊天记录 -->
 				<navigator :id="'recond'+index" class="cu-item" :url="'/pages/chat/chat?userId='+index+'&avatar='+n_item.img+'&member_id='+n_item.id+'&member_id_token='+n_item.member_id"
 				 v-for="(n_item,index) in C_ChatRecond" :key="index">
@@ -25,17 +24,14 @@
 					</view>
 				</navigator>
 				
-				
-				
-				
 				<navigator class="cu-item" :url="'/pages/chat/chat?userId='+index+'&avatar='+item.img+'&member_id='+item.id+'&member_id_token='+item.member_id"
 				 v-for="(item,index) in C_UserList" v-if="item.lean != true" :key="index">
 					<view class="cu-avatar round lg" :style="{background:'url('+item.img+')'}"></view>
 					<view class="content">
-						<view class="text-grey">{{item.remark}}({{item.username}})</view>
+						<view class="text-grey">{{item.username}}({{item.remark}})</view>
 						<view class="text-gray text-sm flex">
 							<view class="text-cut">
-								{{item.current_msg}}
+								{{JSON.parse(item.reply_msg)[JSON.parse(item.reply_msg).length-1].text}}
 							</view>
 						</view>
 					</view>

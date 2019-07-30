@@ -149,6 +149,7 @@
 		// 接收页面传过来的参数,e代表的是数组用户的下标
 		onLoad(e) {
 			console.log(this.$store.state.G_UserList[e.userId]);
+			this.$store.state.G_UserList[e.userId].lean = false;
 			uni.setNavigationBarTitle({
 					title: this.$store.state.G_UserList[e.userId].remark == "设置备注" ? this.$store.state.G_UserList[e.userId].username : this.$store.state.G_UserList[e.userId].remark
 				}),
