@@ -63,8 +63,8 @@
         "list": [{
             "pagePath": "pages/main/main",
             "text": "聊天",
-            "iconPath": "static/img/home.png",
-            "selectedIconPath": "static/img/homeHL.png"
+            "iconPath": "static/img/chat.png",
+            "selectedIconPath": "static/img/chatHL.png"
         }, 
 		{
 			"pagePath":"pages/user/UserFriends",
@@ -75,8 +75,8 @@
 		{
             "pagePath": "pages/user/user",
             "text": "群发",
-            "iconPath": "static/img/user.png",
-            "selectedIconPath": "static/img/userHL.png"
+            "iconPath": "static/img/batchSend.png",
+            "selectedIconPath": "static/img/batchSendHL.png"
         }]
     },
     "globalStyle": {

@@ -1,8 +1,8 @@
 <template>
 	<view @tap="holdup">
-		<view id="chat" class="cu-chat">
+		<view class="cu-chat">
 			<!-- 发送消息（自己） -->
-			<view :id="'chat_' + index" class="cu-item" v-for="(item,index) in ChatRecord" :key="index" :class="item.from==1?'':'self'">
+			<view class="cu-item" v-for="(item,index) in ChatRecord" :key="index" :class="item.from==1?'':'self'">
 				<!-- 判断是否from是否为1（1是用户，2是自己）来隐藏显示 -->
 				<view v-if="item.from==1" class="cu-avatar round" :style="{background:'url('+img+')'}"></view>
 				<view class="main">
@@ -136,17 +136,6 @@
 			uniDrawer,
 			xflSelect
 		},
-		/* watch: {
-			ChatRecord: () => {
-				console.log("自动下滑至页面底部");
-				setTimeout(()=>{
-					uni.pageScrollTo({
-						scrollTop: 99999,
-						duration: 500
-					});
-				}, 500);
-			}
-		}, */
 		// 接收页面传过来的参数,e代表的是数组用户的下标
 		onLoad(e) {
 			this.$store.state.G_UserList[e.userId].lean = false;
@@ -345,10 +334,8 @@
 					success: (res) => {
 						console.log("----------获取数据------------")
 						let chatId = res.data.message;
-						let len = 0;
 						for (let item in chatId) {
 							sef.ChatRecord.unshift(chatId[item]);
-							len+=90;
 							if (chatId[item].type == 'image' || chatId[item].type == 'sticker') {
 								sef.addImageData(chatId[item], true);
 							} else if (chatId[item].type == 'audio') {
@@ -364,11 +351,6 @@
 							}
 						};
 						uni.stopPullDownRefresh();
-						console.log("len-----" + len)
-						/* uni.pageScrollTo({
-							scrollTop: len,
-							duration: 0
-						}); */
 						sef.chatFrame();
 					}
 				});
