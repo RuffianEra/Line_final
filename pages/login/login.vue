@@ -183,7 +183,7 @@
 							let _data=JSON.stringify(res.data);
 							if(res.data.status==1)
 							{
-							rot.TipsText='登录成功!'
+							rot.TipsText=res.data.msg
 							if(rot.Isremember)
 							{
 								// 勾选记住密码,将密码保存到本机缓存
@@ -221,7 +221,8 @@
 								url: '/pages/main/main'
 							});
 							}else{
-								rot.TipsText='登录失败';
+								rot.TipsText=res.data.msg
+								console.log(res.data.msg)
 							}
 					}
 				});
