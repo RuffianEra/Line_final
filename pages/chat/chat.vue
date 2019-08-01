@@ -137,12 +137,12 @@
 			xflSelect
 		},
 		// 接收页面传过来的参数,e代表的是数组用户的下标
-		onLoad(e) {
+		onLoad(e) {//await this.$nextTick()
 			this.$store.state.G_UserList[e.userId].lean = false;
 			uni.setNavigationBarTitle({
-					title: this.$store.state.G_UserList[e.userId].remark == "设置备注" ? this.$store.state.G_UserList[e.userId].username : this.$store.state.G_UserList[e.userId].remark
-				}),
-				this.icon = require("../../static/emojis.json");
+				title: this.$store.state.G_UserList[e.userId].remark == "设置备注" ? this.$store.state.G_UserList[e.userId].username : this.$store.state.G_UserList[e.userId].remark
+			}),
+			this.icon = require("../../static/emojis.json");
 			//接收用户id下标
 			this.User_id = e.userId;
 			this.img = e.avatar;
@@ -165,7 +165,7 @@
 					success: (res) => {
 						if (res.data.status == 1) {
 							for (let arry in res.data.message) {
-								sef.ChatRecord.unshift(res.data.message[arry]);
+								sef.ChatRecord.push(res.data.message[arry]);
 								if (res.data.message[arry].type == 'image' || res.data.message[arry].type == 'sticker') {
 									sef.addImageData(chatId[item], true);
 								} else if (res.data.message[arry].type == 'audio') {
@@ -180,6 +180,9 @@
 									});
 									res.data.message[arry].inner = innerAudioContext;
 								}
+								sef.$nextTick(function () {
+									console.log("数据已更新") // => '已更新'
+								})
 							}
 						}
 					}
@@ -199,13 +202,15 @@
 				};
 				innerAudioContext.onCanplay(function(res) {
 					chatId.time = innerAudioContext.duration > 1 ? Math.ceil(innerAudioContext.duration) : 1;
+					that.$nextTick(function () {
+						console.log("数据已更新")
+					})
 				});
-				that.ChatRecord.push(chatId);
 				that.uploadFile("http://www.aot9a.cn/index/user/apiupload_Audio", res.tempFilePath, "audio", {
 					"user_id": that.$store.state.account_key,
 					"yzpass": that.$store.state.account_psw,
 					"member_id": that.member_id
-				});
+				}, chatId);
 			});
 		},
 		onUnload() {
@@ -271,12 +276,6 @@
 					that.waitList=res.data.userlist;
 				}
 			});
-			/* setTimeout(()=>{
-				uni.pageScrollTo({
-					scrollTop: 99999,
-					duration: 0
-				});
-			}, 500); */
 		},
 		onPageScroll(scrollTop){
 			console.log("当前已经滚动----" + scrollTop.scrollTop)
@@ -314,7 +313,7 @@
 			},
 			/* 进入页面调用一次，获取与该客户所有聊天数据 */
 			gainAllData() {
-				this.pullData(1);
+				this.pullData();
 				console.log("获取与当前用户的所有聊天数据");
 			},
 			pullData(){
@@ -349,6 +348,9 @@
 								});
 								chatId[item].inner = innerAudioContext;
 							}
+							sef.$nextTick(function () {
+								console.log("数据已更新") // => '已更新'
+							})
 						};
 						uni.stopPullDownRefresh();
 						sef.chatFrame();
@@ -359,10 +361,7 @@
 				let sef = this;
 				setTimeout(() => {
 					this.nodes = uni.createSelectorQuery().in(this).selectAll(".cu-item").boundingClientRect(function(e){
-						let lss = e[29].bottom;
-						/* for(let index in e){
-							less += e[indext]
-						} */
+						let lss = e[28].bottom;
 						uni.pageScrollTo({
 							scrollTop: lss,
 							duration: 0
@@ -390,13 +389,21 @@
 						member_id: this.member_id
 					},
 					success: (res) => {
+						this.ChatRecord.push({
+							"from": 2,
+							"text": this.dataSend,
+							"type": "text",
+							"time": new Date().getTime()
+						});
+						this.dataSend = "";
 						console.log("返回数据----" + JSON.stringify(res));
 					}
 				});
 				console.log("发送请求");
 			},
 			/* 上传文件 */
-			uploadFile(url, filePath, name, formData) {
+			uploadFile(url, filePath, name, formData, chatId) {
+				let that = this;
 				uni.uploadFile({
 					url: url,
 					filePath: filePath,
@@ -407,6 +414,11 @@
 					},
 					success: (res) => {
 						console.log("上传文件时返回数据---" + res.data);
+						that.ChatRecord.push(chatId);
+						that.addImageData(chatId, false);
+						that.$nextTick(function () {
+							console.log("数据已更新") // => '已更新'
+						})
 					}
 				})
 			},
@@ -467,14 +479,13 @@
 				}
 			},
 			iconSend(index) {
+				let sef = this;
 				let arr = {
 					"from": 2,
 					"text": this.icon[index].src,
 					"type": "sticker",
 					"time": new Date().getTime()
 				};
-				this.ChatRecord.push(arr);
-				this.addImageData(arr, false);
 				this.iconOpen = false;
 				uni.request({
 					url: "http://www.aot9a.cn/index/user/apisticker",
@@ -492,6 +503,11 @@
 						stickerid: this.icon[index].site.split(",")[1]
 					},
 					success: (res) => {
+						this.ChatRecord.push(arr);
+						this.addImageData(arr, false);
+						sef.$nextTick(function () {
+							console.log("数据已更新") // => '已更新'
+						})
 						console.log("返回数据----" + JSON.stringify(res));
 					}
 				});
@@ -510,28 +526,19 @@
 							"type": "image",
 							"time": new Date().getTime()
 						};
-						sef.ChatRecord.push(arr);
-						sef.addImageData(arr, false);
 						console.log(temp.tempFilePaths);
 						sef.uploadFile("http://www.aot9a.cn/index/user/apiupload_photo", temp.tempFilePaths[0].substring(":"), "img", {
 							"user_id": sef.$store.state.account_key,
 							"yzpass": sef.$store.state.account_psw,
 							"member_id": sef.member_id,
 							"file": 'CSSimage'
-						});
+						}, arr);
 						console.log("发送图片");
 					}
 				})
 			},
 			send() {
-				this.ChatRecord.push({
-					"from": 2,
-					"text": this.dataSend,
-					"type": "text",
-					"time": new Date().getTime()
-				});
 				this.uploadData();
-				this.dataSend = "";
 			},
 			closeDrawer() {
 				this.IsVisible = false
