@@ -183,6 +183,12 @@
 								sef.$nextTick(function () {
 									console.log("数据已更新") // => '已更新'
 								})
+								setTimeout(() => {
+									uni.pageScrollTo({
+										scrollTop: 999999,
+										duration: 0
+									});
+								}, 200)
 							}
 						}
 					}
@@ -397,6 +403,12 @@
 						});
 						this.dataSend = "";
 						console.log("返回数据----" + JSON.stringify(res));
+						setTimeout(() => {
+							uni.pageScrollTo({
+								scrollTop: 999999,
+								duration: 0
+							});
+						}, 200)
 					}
 				});
 				console.log("发送请求");
@@ -419,6 +431,12 @@
 						that.$nextTick(function () {
 							console.log("数据已更新") // => '已更新'
 						})
+						setTimeout(() => {
+							uni.pageScrollTo({
+								scrollTop: 999999,
+								duration: 0
+							});
+						}, 200)
 					}
 				})
 			},
@@ -509,6 +527,13 @@
 							console.log("数据已更新") // => '已更新'
 						})
 						console.log("返回数据----" + JSON.stringify(res));
+						
+						setTimeout(() => {
+							uni.pageScrollTo({
+								scrollTop: 999999,
+								duration: 0
+							});
+						}, 200)
 					}
 				});
 			},
