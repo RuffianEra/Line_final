@@ -12,8 +12,7 @@
 						<!-- 表情 -->
 						<image v-else-if="item.type == 'sticker'" :src="item.text" :style="{'width': item.wid +'px', 'height': item.hei + 'px'}"></image>
 						<!-- 语言消息 -->
-						<view v-else-if="item.type == 'audio'" class="bubble voice" @tap="openAudio(index, item.inner)" :class="index==iconId?'play':''"
-						 style="display: flex;">
+						<view v-else-if="item.type == 'audio'" class="bubble voice" @tap="openAudio(index, item.inner)" :class="index==iconId?'play':''" style="display: flex;">
 							<view v-if="item.from==1" class="icon other-voice"></view>
 							<view class="length">{{item.time}}s</view>
 							<view v-if="item.from==2" class="icon my-voice"></view>
@@ -128,27 +127,17 @@
 				iconOpen: false,
 				iconId: 0,
 				intervalID: 0,
-				waitListID: 0
+				waitListID: 0,
+				page: 1,
+				nodes: {}
 			};
 		},
 		components: {
 			uniDrawer,
 			xflSelect
 		},
-		watch: {
-			ChatRecord: () => {
-				console.log("自动下滑至页面底部");
-				setTimeout(()=>{
-					uni.pageScrollTo({
-						scrollTop: 99999,
-						duration: 500
-					});
-				}, 500);
-			}
-		},
 		// 接收页面传过来的参数,e代表的是数组用户的下标
 		onLoad(e) {
-			console.log(this.$store.state.G_UserList[e.userId]);
 			this.$store.state.G_UserList[e.userId].lean = false;
 			uni.setNavigationBarTitle({
 					title: this.$store.state.G_UserList[e.userId].remark == "设置备注" ? this.$store.state.G_UserList[e.userId].username : this.$store.state.G_UserList[e.userId].remark
@@ -174,9 +163,9 @@
 						member_id: sef.member_id
 					},
 					success: (res) => {
-						console.log(res);
 						if (res.data.status == 1) {
 							for (let arry in res.data.message) {
+								sef.ChatRecord.unshift(res.data.message[arry]);
 								if (res.data.message[arry].type == 'image' || res.data.message[arry].type == 'sticker') {
 									sef.addImageData(chatId[item], true);
 								} else if (res.data.message[arry].type == 'audio') {
@@ -186,20 +175,16 @@
 										sef.iconId = 0;
 									});
 									innerAudioContext.onCanplay(function() {
-										console.log("音频文件长度：" + innerAudioContext.duration);
 										res.data.message[arry].time = innerAudioContext.duration > 1 ? Math.ceil(innerAudioContext.duration) :
 											1;
 									});
 									res.data.message[arry].inner = innerAudioContext;
-									sef.ChatRecord.push(res.data.message[arry]);
-								} else {
-									sef.ChatRecord.push(res.data.message[arry]);
 								}
 							}
 						}
 					}
 				});
-				console.log("10S定时任务,异步实时获取用户聊天记录");
+				//console.log("10S定时任务,异步实时获取用户聊天记录");
 			}, 5000, this);
 			record.onStop(function(res) {
 				let innerAudioContext = uni.createInnerAudioContext();
@@ -213,10 +198,8 @@
 					"inner": innerAudioContext
 				};
 				innerAudioContext.onCanplay(function(res) {
-					console.log("音频文件长度：" + innerAudioContext.duration);
 					chatId.time = innerAudioContext.duration > 1 ? Math.ceil(innerAudioContext.duration) : 1;
 				});
-				console.log(res.tempFilePath);
 				that.ChatRecord.push(chatId);
 				that.uploadFile("http://www.aot9a.cn/index/user/apiupload_Audio", res.tempFilePath, "audio", {
 					"user_id": that.$store.state.account_key,
@@ -288,6 +271,19 @@
 					that.waitList=res.data.userlist;
 				}
 			});
+			/* setTimeout(()=>{
+				uni.pageScrollTo({
+					scrollTop: 99999,
+					duration: 0
+				});
+			}, 500); */
+		},
+		onPageScroll(scrollTop){
+			console.log("当前已经滚动----" + scrollTop.scrollTop)
+		},
+		onPullDownRefresh(){
+			this.page += 1;
+			this.pullData();
 		},
 		methods: {
 			...mapMutations(['setG_UserList']),
@@ -318,6 +314,10 @@
 			},
 			/* 进入页面调用一次，获取与该客户所有聊天数据 */
 			gainAllData() {
+				this.pullData(1);
+				console.log("获取与当前用户的所有聊天数据");
+			},
+			pullData(){
 				let sef = this;
 				uni.request({
 					url: 'http://www.aot9a.cn/index/user/apimemberfind',
@@ -329,11 +329,13 @@
 						user_id: sef.$store.state.account_key,
 						member_id: sef.member_id,
 						yzpass: sef.$store.state.account_psw,
-						page: 1
+						page: sef.page
 					},
 					success: (res) => {
-						let chatId = JSON.parse(res.data.data.reply_msg);
+						console.log("----------获取数据------------")
+						let chatId = res.data.message;
 						for (let item in chatId) {
+							sef.ChatRecord.unshift(chatId[item]);
 							if (chatId[item].type == 'image' || chatId[item].type == 'sticker') {
 								sef.addImageData(chatId[item], true);
 							} else if (chatId[item].type == 'audio') {
@@ -343,18 +345,32 @@
 									sef.iconId = 0;
 								});
 								innerAudioContext.onCanplay(function(res) {
-									console.log("音频文件长度：" + innerAudioContext.duration);
 									chatId[item].time = innerAudioContext.duration > 1 ? Math.ceil(innerAudioContext.duration) : 1;
 								});
 								chatId[item].inner = innerAudioContext;
-								sef.ChatRecord.push(chatId[item]);
-							} else {
-								sef.ChatRecord.push(chatId[item]);
 							}
 						};
+						uni.stopPullDownRefresh();
+						sef.chatFrame();
 					}
 				});
-				console.log("获取与当前用户的所有聊天数据");
+			},
+			chatFrame() {
+				let sef = this;
+				setTimeout(() => {
+					this.nodes = uni.createSelectorQuery().in(this).selectAll(".cu-item").boundingClientRect(function(e){
+						let lss = e[29].bottom;
+						/* for(let index in e){
+							less += e[indext]
+						} */
+						uni.pageScrollTo({
+							scrollTop: lss,
+							duration: 0
+						});
+						sef.nodes = e[0];
+						console.log("--------nodes-----" + sef.nodes.top)
+					}).exec();
+				}, 0)
 			},
 			/* 发送数据请求 */
 			uploadData() {
@@ -390,7 +406,6 @@
 						'content-type': 'application/x-www-form-urlencoded'
 					},
 					success: (res) => {
-						console.log("上传文件时返回数据---" + JSON.stringify(res));
 						console.log("上传文件时返回数据---" + res.data);
 					}
 				})
@@ -414,7 +429,6 @@
 						}
 					}
 				});
-				this.ChatRecord.push(item);
 			},
 			openAudio(index, inner) {
 				this.iconId = index;
@@ -453,12 +467,14 @@
 				}
 			},
 			iconSend(index) {
-				this.addImageData({
+				let arr = {
 					"from": 2,
 					"text": this.icon[index].src,
 					"type": "sticker",
 					"time": new Date().getTime()
-				}, false);
+				};
+				this.ChatRecord.push(arr);
+				this.addImageData(arr, false);
 				this.iconOpen = false;
 				uni.request({
 					url: "http://www.aot9a.cn/index/user/apisticker",
@@ -488,12 +504,14 @@
 				uni.chooseImage({
 					success(temp) {
 						console.log("图片路径: " + temp.tempFilePaths[0]);
-						sef.addImageData({
+						let arr = {
 							"from": 2,
 							"text": temp.tempFilePaths[0],
 							"type": "image",
 							"time": new Date().getTime()
-						}, false);
+						};
+						sef.ChatRecord.push(arr);
+						sef.addImageData(arr, false);
 						console.log(temp.tempFilePaths);
 						sef.uploadFile("http://www.aot9a.cn/index/user/apiupload_photo", temp.tempFilePaths[0].substring(":"), "img", {
 							"user_id": sef.$store.state.account_key,
