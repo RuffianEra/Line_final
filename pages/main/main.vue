@@ -51,7 +51,8 @@
 				listTouchStart: 0,
 				listTouchDirection: null,
 				TopNum: this.$store.state.G_UserList[0].is_zhiding+1,
-				TopNums: 0
+				TopNums: 0,
+				LastMessage: ''
 			}
 		},
 		computed: {
@@ -97,6 +98,20 @@
 						method: 'POST',
 						success(res) {
 							if (res.data.status != 2) {
+								let music=uni.createInnerAudioContext()
+								music.src="../../static/news.mp3"
+								// 第一次收到消息
+								if(that.LastMessage=='')
+								{
+								that.LastMessage=res.data.data[0].reply_msg
+								// 播放新消息音乐
+								music.play()
+								}else if(that.LastMessage!=res.data.data[0].reply_msg)
+								{
+									that.LastMessage=res.data.data[0].reply_msg
+									// 播放新消息音乐
+									music.play()
+								}
 									// 在最新聊天数组里去重复
 									for (var i = 0; i < that.$store.state.G_UserList.length; i++) {
 										if (that.$store.state.G_UserList[i].id == res.data.data[0].id) {
@@ -104,6 +119,7 @@
 											if(that.$store.state.G_UserList[i].is_zhiding!=2)
 											{
 												// 在原位置更新
+												music.play()
 												that.$set(that.$store.state.G_UserList,i,res.data.data[0])
 											}else if(that.$store.state.G_UserList[i].is_zhiding==2){
 												// 将消息覆盖
