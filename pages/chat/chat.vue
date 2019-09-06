@@ -32,12 +32,11 @@
 
 
 		<!-- 底部导航栏 -->
-		<view class="cu-bar foot input" :style="[{bottom:InputBottom+'px'}]">
+		<view class="cu-bar foot input" >
 			<view class="action">
 				<text @tap="openVoice()" class="cuIcon-sound text-grey"></text>
 			</view>
-			<input v-if="toggle" class="solid-bottom" :adjust-position="false" :focus="false" maxlength="300" cursor-spacing="10"
-			 @focus="InputFocus" @blur="InputBlur" v-model="dataSend"></input>
+			<input v-if="toggle" class="solid-bottom" :focus="false" maxlength="300" cursor-spacing="10" v-model="dataSend"></input>
 			<button v-if="!toggle" class="solid-bottom" @longpress="startRecord()" @touchend="endRecord()">按住开始录音</button>
 			<view class="action">
 				<text id="face" class="cuIcon-emojifill text-grey" @tap="openIcon()"></text>
@@ -112,7 +111,6 @@
 				list: [],
 				waitList: [],
 				IsVisible: false,
-				InputBottom: 0,
 				ChatRecord: [],
 				arrays: [],
 				test: self,
@@ -567,12 +565,6 @@
 			},
 			closeDrawer() {
 				this.IsVisible = false
-			},
-			InputFocus(e) {
-				this.InputBottom = e.detail.height
-			},
-			InputBlur(e) {
-				this.InputBottom = 0
 			},
 			getValue(e) {
 				// 将用户选中的消息给变量
